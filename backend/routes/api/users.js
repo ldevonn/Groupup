@@ -20,21 +20,35 @@ const validateSignup = [
     .exists({ checkFalsy: true })
     .isLength({ min: 6 })
     .withMessage("Password must be 6 characters or more."),
+  check("firstName")
+    .exists({ checkFalsy: true })
+    .withMessage("Please provide a first name."),
+  check("lastName")
+    .exists({ checkFalsy: true })
+    .withMessage("Please provide a last name."),
   handleValidationErrors,
 ];
 
 //signup
 router.post("/", validateSignup, async (req, res) => {
   //saves email, password, and username values from request body
-  const { email, password, username } = req.body;
+  const { firstName, lastName, username, email, password } = req.body;
   //hashes the password
   const hashedPassword = bcrypt.hashSync(password);
   //creates a user with the email, username, and hashedPassword
-  const user = await User.create({ email, username, hashedPassword });
+  const user = await User.create({
+    firstName,
+    lastName,
+    email,
+    username,
+    hashedPassword,
+  });
 
   //user object
   const safeUser = {
     id: user.id,
+    firstName: user.firstName,
+    lastName: user.lastName,
     email: user.email,
     username: user.username,
   };
