@@ -2,11 +2,6 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Group extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       Group.belongsTo(models.User, { foreignKey: "organizerId" });
       Group.hasMany(models.Member, {
@@ -53,7 +48,36 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Group",
+      defaultScope: {
+        attributes: [
+          "id",
+          "organizerId",
+          "name",
+          "about",
+          "type",
+          "private",
+          "city",
+          "state",
+          "createdAt",
+          "updatedAt",
+          "previewImage",
+        ],
+      },
     }
   );
+
+  Group.addScope("withMemberCount", {
+    attributes: {
+      include: [
+        [
+          sequelize.literal(
+            '(SELECT COUNT(*) FROM "Members" WHERE "Members"."groupId" = "Group"."id")'
+          ),
+          "numMembers",
+        ],
+      ],
+    },
+  });
+
   return Group;
 };

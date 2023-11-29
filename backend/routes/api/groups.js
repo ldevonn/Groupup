@@ -4,38 +4,9 @@ const Sequelize = require("sequelize");
 const router = express.Router();
 const { requireAuth } = require("../../utils/auth.js");
 
-Group.addScope("withMemberCount", {
-  attributes: {
-    include: [
-      [
-        Sequelize.literal(
-          '(SELECT COUNT(*) FROM "Members" WHERE "Members"."GroupId" = "Group"."id")'
-        ),
-        "numMembers",
-      ],
-    ],
-  },
-});
-
 //get all groups
 router.get("/", async (req, res) => {
-  const groups = await Group.scope("withMemberCount").findAll({
-    attributes: {
-      include: [
-        "id",
-        "organizerId",
-        "name",
-        "about",
-        "type",
-        "private",
-        "city",
-        "state",
-        "createdAt",
-        "updatedAt",
-        "previewImage",
-      ],
-    },
-  });
+  const groups = await Group.scope("withMemberCount").findAll();
   return res.json({
     Groups: groups.map((group) => ({
       id: group.id,
@@ -59,21 +30,6 @@ router.get("/current", requireAuth, async (req, res) => {
   const userId = req.user.id;
   const groups = await Group.scope("withMemberCount").findAll({
     where: { organizerId: userId },
-    attributes: {
-      include: [
-        "id",
-        "organizerId",
-        "name",
-        "about",
-        "type",
-        "private",
-        "city",
-        "state",
-        "createdAt",
-        "updatedAt",
-        "previewImage",
-      ],
-    },
   });
 
   return res.json({
@@ -95,25 +51,10 @@ router.get("/current", requireAuth, async (req, res) => {
 });
 
 //get details of a group from it's id
-
 router.get("/:groupId", async (req, res) => {
   const groupId = req.params.groupId;
   const group = await Group.scope("withMemberCount").findOne({
     where: { id: groupId },
-    attributes: {
-      include: [
-        "id",
-        "organizerId",
-        "name",
-        "about",
-        "type",
-        "private",
-        "city",
-        "state",
-        "createdAt",
-        "updatedAt",
-      ],
-    },
   });
   if (!group) {
     return res.status(404).json({ message: "Group couldn't be found" });
