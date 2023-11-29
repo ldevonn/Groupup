@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Group.belongsTo(models.User, { foreignKey: "organizerId" });
+      Group.hasMany(models.Member, {
+        foreignKey: "groupId",
+        onDelete: "CASCADE",
+      });
     }
   }
   Group.init(
