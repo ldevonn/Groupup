@@ -146,4 +146,46 @@ router.post("/", validateNewGroup, requireAuth, async (req, res) => {
   return res.status(201).json(response);
 });
 
+//edit a group
+router.put("/:groupId", validateNewGroup, requireAuth, async (req, res) => {
+  const groupId = req.params.groupId;
+  const { name, about, type, private, city, state } = req.body;
+
+  const group = await Group.findByPk(groupId);
+
+  if (!group) {
+    return res.status(404).json({ message: "Group couldn't be found" });
+  }
+
+  if (req.user.id !== group.organizerId) {
+    return res
+      .status(403)
+      .json({ error: "You are not the organizer of this group" });
+  }
+
+  group.name = name;
+  group.about = about;
+  group.type = type;
+  group.private = private;
+  group.city = city;
+  group.state = state;
+
+  await group.save();
+
+  const response = {
+    id: group.id,
+    organizerId: group.organizerId,
+    name: group.name,
+    about: group.about,
+    type: group.type,
+    private: group.private,
+    city: group.city,
+    state: group.state,
+    createdAt: group.createdAt,
+    updatedAt: group.updatedAt,
+  };
+
+  return res.json(response);
+});
+
 module.exports = router;
