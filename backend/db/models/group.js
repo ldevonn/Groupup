@@ -19,28 +19,36 @@ module.exports = (sequelize, DataTypes) => {
       name: {
         allowNull: false,
         type: DataTypes.STRING,
+        validate: {
+          len: [1, 60],
+        },
       },
       about: {
         allowNull: false,
         type: DataTypes.STRING,
+        validate: {
+          len: [50, 256],
+        },
       },
       type: {
         allowNull: false,
         type: DataTypes.STRING,
+        validate: {
+          isIn: [["Online", "In person"]],
+        },
       },
       private: {
         allowNull: false,
         type: DataTypes.BOOLEAN,
+        validate: {
+          isBoolean: true,
+        },
       },
       city: {
         allowNull: false,
         type: DataTypes.STRING,
       },
       state: {
-        allowNull: false,
-        type: DataTypes.STRING,
-      },
-      previewImage: {
         allowNull: false,
         type: DataTypes.STRING,
       },
@@ -60,7 +68,6 @@ module.exports = (sequelize, DataTypes) => {
           "state",
           "createdAt",
           "updatedAt",
-          "previewImage",
         ],
       },
     }

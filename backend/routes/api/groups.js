@@ -3,6 +3,30 @@ const { Group } = require("../../db/models");
 const Sequelize = require("sequelize");
 const router = express.Router();
 const { requireAuth } = require("../../utils/auth.js");
+const { check } = require("express-validator");
+const { handleValidationErrors } = require("../../utils/validation.js");
+
+const validateNewGroup = [
+  check("name")
+    .exists({ checkFalsy: true })
+    .isLength({ max: 60 })
+    .withMessage("Name must be 60 characters or less."),
+  check("about")
+    .exists({ checkFalsy: true })
+    .isLength({ min: 50 })
+    .withMessage("About must be 50 characters or more"),
+  check("type")
+    .exists({ checkFalsy: true })
+    .isIn(["Online", "In person"])
+    .withMessage("Type must be 'Online' or 'In person'"),
+  check("private")
+    .exists({ checkFalsy: true })
+    .isBoolean(true)
+    .withMessage("Private must be a boolean"),
+  check("city").exists({ checkFalsy: true }).withMessage("City is required"),
+  check("state").exists({ checkFalsy: true }).withMessage("State is required"),
+  handleValidationErrors,
+];
 
 //get all groups
 router.get("/", async (req, res) => {
@@ -20,7 +44,6 @@ router.get("/", async (req, res) => {
       createdAt: group.createdAt,
       updatedAt: group.updatedAt,
       numMembers: group.getDataValue("numMembers"),
-      previewImage: group.previewImage,
     })),
   });
 });
@@ -45,7 +68,6 @@ router.get("/current", requireAuth, async (req, res) => {
       createdAt: group.createdAt,
       updatedAt: group.updatedAt,
       numMembers: group.getDataValue("numMembers"),
-      previewImage: group.previewImage,
     })),
   });
 });
@@ -90,6 +112,38 @@ router.delete("/:groupId", requireAuth, async (req, res) => {
 
   await group.destroy();
   return res.json({ message: "Successfully deleted" });
+});
+
+//create a group
+router.post("/", validateNewGroup, requireAuth, async (req, res) => {
+  const { name, about, type, private, city, state } = req.body;
+
+  const organizerId = req.user.id;
+
+  const newGroup = await Group.create({
+    organizerId,
+    name,
+    about,
+    type,
+    private,
+    city,
+    state,
+  });
+
+  const response = {
+    id: newGroup.id,
+    organizerId: newGroup.organizerId,
+    name: newGroup.name,
+    about: newGroup.about,
+    type: newGroup.type,
+    private: newGroup.private,
+    city: newGroup.city,
+    state: newGroup.state,
+    createdAt: newGroup.createdAt,
+    updatedAt: newGroup.updatedAt,
+  };
+
+  return res.status(201).json(response);
 });
 
 module.exports = router;
