@@ -14,7 +14,7 @@ module.exports = {
           primaryKey: true,
           type: Sequelize.INTEGER,
         },
-        group_id: {
+        groupId: {
           allowNull: false,
           type: Sequelize.INTEGER,
         },

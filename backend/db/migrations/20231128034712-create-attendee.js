@@ -16,7 +16,11 @@ module.exports = {
           primaryKey: true,
           type: Sequelize.INTEGER,
         },
-        event_id: {
+        eventId: {
+          allowNull: false,
+          type: Sequelize.INTEGER,
+        },
+        userId: {
           allowNull: false,
           type: Sequelize.INTEGER,
         },

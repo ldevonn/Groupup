@@ -16,13 +16,41 @@ module.exports = {
           primaryKey: true,
           type: Sequelize.INTEGER,
         },
-        group_id: {
+        venueId: {
           allowNull: false,
           type: Sequelize.INTEGER,
         },
-        venue_id: {
+        groupId: {
           allowNull: false,
           type: Sequelize.INTEGER,
+        },
+        name: {
+          allowNull: false,
+          type: Sequelize.STRING,
+        },
+        description: {
+          allowNull: false,
+          type: Sequelize.TEXT,
+        },
+        type: {
+          allowNull: false,
+          type: Sequelize.STRING,
+        },
+        capacity: {
+          allowNull: false,
+          type: Sequelize.INTEGER,
+        },
+        price: {
+          allowNull: false,
+          type: Sequelize.INTEGER,
+        },
+        startDate: {
+          allowNull: false,
+          type: Sequelize.DATE,
+        },
+        endDate: {
+          allowNull: false,
+          type: Sequelize.DATE,
         },
         createdAt: {
           allowNull: false,

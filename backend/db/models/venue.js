@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Venue.init(
     {
-      group_id: {
+      groupId: {
         allowNull: false,
         type: DataTypes.INTEGER,
       },

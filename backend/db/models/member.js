@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
   }
   Member.init(
     {
+      userId: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+      },
       groupId: {
         allowNull: false,
         type: DataTypes.INTEGER,

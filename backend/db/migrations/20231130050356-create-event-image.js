@@ -1,14 +1,12 @@
 "use strict";
-
 let options = {};
 if (process.env.NODE_ENV === "production") {
   options.schema = process.env.SCHEMA;
 }
-
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable(
-      "Members",
+      "EventImages",
       {
         id: {
           allowNull: false,
@@ -16,17 +14,17 @@ module.exports = {
           primaryKey: true,
           type: Sequelize.INTEGER,
         },
-        userId: {
+        eventId: {
           allowNull: false,
           type: Sequelize.INTEGER,
         },
-        groupId: {
-          allowNull: false,
-          type: Sequelize.INTEGER,
-        },
-        status: {
+        url: {
           allowNull: false,
           type: Sequelize.STRING,
+        },
+        preview: {
+          allowNull: false,
+          type: Sequelize.BOOLEAN,
         },
         createdAt: {
           allowNull: false,
@@ -43,7 +41,6 @@ module.exports = {
     );
   },
   async down(queryInterface, Sequelize) {
-    options.tableName = "Members";
-    await queryInterface.dropTable("Members");
+    await queryInterface.dropTable("EventImages");
   },
 };

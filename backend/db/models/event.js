@@ -13,13 +13,41 @@ module.exports = (sequelize, DataTypes) => {
   }
   Event.init(
     {
-      group_id: {
+      venueId: {
         allowNull: false,
         type: DataTypes.INTEGER,
       },
-      venue_id: {
+      groupId: {
         allowNull: false,
         type: DataTypes.INTEGER,
+      },
+      name: {
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
+      description: {
+        allowNull: false,
+        type: DataTypes.TEXT,
+      },
+      type: {
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
+      capacity: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+      },
+      price: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+      },
+      startDate: {
+        allowNull: false,
+        type: DataTypes.DATE,
+      },
+      endDate: {
+        allowNull: false,
+        type: DataTypes.DATE,
       },
     },
     {
