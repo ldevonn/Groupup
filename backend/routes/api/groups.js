@@ -76,4 +76,20 @@ router.get("/:groupId", async (req, res) => {
   });
 });
 
+//delete a group
+router.delete("/:groupId", requireAuth, async (req, res) => {
+  const groupId = req.params.groupId;
+
+  const group = await Group.findOne({
+    where: { id: groupId },
+  });
+
+  if (!group) {
+    return res.status(404).json({ message: "Group couldn't be found" });
+  }
+
+  await group.destroy();
+  return res.json({ message: "Successfully deleted" });
+});
+
 module.exports = router;
