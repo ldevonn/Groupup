@@ -1,5 +1,5 @@
 const express = require("express");
-const { Group } = require("../../db/models");
+const { Group, GroupImage } = require("../../db/models");
 const Sequelize = require("sequelize");
 const router = express.Router();
 const { requireAuth } = require("../../utils/auth.js");
@@ -30,9 +30,28 @@ const validateNewGroup = [
 
 //get all groups
 router.get("/", async (req, res) => {
-  const groups = await Group.scope("withMemberCount").findAll();
-  return res.json({
-    Groups: groups.map((group) => ({
+  const groups = await Group.scope("withMemberCount").findAll({
+    include: [
+      {
+        model: GroupImage,
+        where: {
+          groupId: Group.sequelize.col("Group.id"),
+          preview: true,
+        },
+        required: false,
+      },
+    ],
+  });
+
+  const formattedGroups = groups.map((group) => {
+    const previewImages = group.GroupImages.filter((image) => image.preview);
+    let previewImage = null;
+
+    if (previewImages.length > 0) {
+      previewImage = previewImages[0].url;
+    }
+
+    return {
       id: group.id,
       organizerId: group.organizerId,
       name: group.name,
@@ -44,8 +63,10 @@ router.get("/", async (req, res) => {
       createdAt: group.createdAt,
       updatedAt: group.updatedAt,
       numMembers: group.getDataValue("numMembers"),
-    })),
+      previewImage,
+    };
   });
+  return res.json({ Groups: formattedGroups });
 });
 
 //get groups created by authenticated current user
@@ -53,10 +74,27 @@ router.get("/current", requireAuth, async (req, res) => {
   const userId = req.user.id;
   const groups = await Group.scope("withMemberCount").findAll({
     where: { organizerId: userId },
+    include: [
+      {
+        model: GroupImage,
+        where: {
+          groupId: Group.sequelize.col("Group.id"),
+          preview: true,
+        },
+        required: false,
+      },
+    ],
   });
 
-  return res.json({
-    Groups: groups.map((group) => ({
+  const formattedGroups = groups.map((group) => {
+    const previewImages = group.GroupImages.filter((image) => image.preview);
+    let previewImage = null;
+
+    if (previewImages.length > 0) {
+      previewImage = previewImages[0].url;
+    }
+
+    return {
       id: group.id,
       organizerId: group.organizerId,
       name: group.name,
@@ -68,8 +106,10 @@ router.get("/current", requireAuth, async (req, res) => {
       createdAt: group.createdAt,
       updatedAt: group.updatedAt,
       numMembers: group.getDataValue("numMembers"),
-    })),
+      previewImage: previewImage,
+    };
   });
+  return res.json({ Groups: formattedGroups });
 });
 
 //get details of a group from it's id
@@ -183,6 +223,33 @@ router.put("/:groupId", validateNewGroup, requireAuth, async (req, res) => {
     state: group.state,
     createdAt: group.createdAt,
     updatedAt: group.updatedAt,
+  };
+
+  return res.json(response);
+});
+
+//add image to group based on groups id
+
+router.post("/:groupId/images", requireAuth, async (req, res) => {
+  const groupId = req.params.groupId;
+  const { url, preview } = req.body;
+
+  const group = await Group.findByPk(groupId);
+
+  if (!group) {
+    return res.status(404).json({ message: "Group couldn't be found" });
+  }
+
+  const newImage = await GroupImage.create({
+    url,
+    groupId,
+    preview,
+  });
+
+  const response = {
+    id: newImage.id,
+    url: newImage.url,
+    preview: newImage.preview,
   };
 
   return res.json(response);

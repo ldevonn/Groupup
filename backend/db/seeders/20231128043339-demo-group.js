@@ -22,7 +22,6 @@ module.exports = {
           state: "NY",
           createdAt: "2021-11-19 20:39:36",
           updatedAt: "2021-11-19 20:39:36",
-          numMembers: 10,
         },
       ],
       { validate: true }
