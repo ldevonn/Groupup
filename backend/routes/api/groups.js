@@ -316,6 +316,7 @@ router.post(
     }
 
     const newVenue = await Venue.create({
+      groupId: parseInt(groupId),
       address,
       city,
       state,
@@ -324,6 +325,8 @@ router.post(
     });
 
     const response = {
+      id: newVenue.id,
+      groupId: newVenue.groupId,
       address: newVenue.address,
       city: newVenue.city,
       state: newVenue.state,
