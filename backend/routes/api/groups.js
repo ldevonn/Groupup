@@ -1,5 +1,5 @@
 const express = require("express");
-const { Group, GroupImage, Venue } = require("../../db/models");
+const { User, Group, GroupImage, Venue } = require("../../db/models");
 const Sequelize = require("sequelize");
 const router = express.Router();
 const { requireAuth } = require("../../utils/auth.js");
@@ -134,6 +134,20 @@ router.get("/:groupId", async (req, res) => {
   const groupId = req.params.groupId;
   const group = await Group.scope("withMemberCount").findOne({
     where: { id: groupId },
+    include: [
+      {
+        model: GroupImage,
+        attributes: ["id", "url", "preview"],
+      },
+      {
+        model: User,
+        attributes: ["id", "firstName", "lastName"],
+      },
+      {
+        model: Venue,
+        attributes: ["id", "groupId", "address", "city", "state", "lat", "lng"],
+      },
+    ],
   });
   if (!group) {
     return res.status(404).json({ message: "Group couldn't be found" });
@@ -152,6 +166,9 @@ router.get("/:groupId", async (req, res) => {
       updatedAt: group.updatedAt,
       numMembers: group.getDataValue("numMembers"),
     },
+    groupImages: group.GroupImages,
+    Organizer: group.User,
+    Venues: group.Venues,
   });
 });
 
