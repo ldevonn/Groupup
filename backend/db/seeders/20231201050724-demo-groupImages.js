@@ -29,7 +29,7 @@ module.exports = {
   async down(queryInterface, Sequelize) {
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(
-      "GroupImage", // Set the table name directly here
+      "GroupImages", // Set the table name directly here
       {
         url: { [Op.in]: ["image url"] },
       },
