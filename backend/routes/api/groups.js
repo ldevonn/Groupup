@@ -1,5 +1,5 @@
 const express = require("express");
-const { Group, GroupImage } = require("../../db/models");
+const { Group, GroupImage, Venue } = require("../../db/models");
 const Sequelize = require("sequelize");
 const router = express.Router();
 const { requireAuth } = require("../../utils/auth.js");
@@ -25,6 +25,23 @@ const validateNewGroup = [
     .withMessage("Private must be a boolean"),
   check("city").exists({ checkFalsy: true }).withMessage("City is required"),
   check("state").exists({ checkFalsy: true }).withMessage("State is required"),
+  handleValidationErrors,
+];
+
+const validateNewVenue = [
+  check("address")
+    .exists({ checkFalsy: true })
+    .withMessage("Street address is required"),
+  check("city").exists({ checkFalsy: true }).withMessage("City is required"),
+  check("state").exists({ checkFalsy: true }).withMessage("State is required"),
+  check("lat")
+    .exists({ checkFalsy: true })
+    .isFloat({ min: -90, max: 90 })
+    .withMessage("Latitude must be within -90 and 90"),
+  check("lng")
+    .exists({ checkFalsy: true })
+    .isFloat({ min: -180, max: 180 })
+    .withMessage("Longitude must be between -180 and 180"),
   handleValidationErrors,
 ];
 
@@ -254,5 +271,68 @@ router.post("/:groupId/images", requireAuth, async (req, res) => {
 
   return res.json(response);
 });
+
+//get all venues for group specified by its id
+
+router.get("/:groupId/venues", requireAuth, async (req, res) => {
+  const groupId = req.params.groupId;
+  const group = await Group.findByPk(groupId);
+
+  if (!group) {
+    return res.status(404).json({ message: "Group couldn't be found" });
+  }
+
+  const venues = await Venue.findAll({
+    attributes: {
+      exclude: ["createdAt", "updatedAt"],
+    },
+    where: {
+      groupId: groupId,
+    },
+  });
+
+  return res.json({ Venues: venues });
+});
+
+//create new venue for group specified by its id
+
+router.post(
+  "/:groupId/venues",
+  validateNewVenue,
+  requireAuth,
+  async (req, res) => {
+    const groupId = req.params.groupId;
+    const organizerId = req.user.id;
+    const { address, city, state, lat, lng } = req.body;
+
+    const group = await Group.findByPk(groupId);
+
+    if (!group) {
+      return res.status(404).json({ message: "Group couldn't be found" });
+    }
+
+    if (group.organizerId !== organizerId) {
+      return res.status(403).json({ message: "Permission denied" });
+    }
+
+    const newVenue = await Venue.create({
+      address,
+      city,
+      state,
+      lat,
+      lng,
+    });
+
+    const response = {
+      address: newVenue.address,
+      city: newVenue.city,
+      state: newVenue.state,
+      lat: newVenue.lat,
+      lng: newVenue.lng,
+    };
+
+    return res.status(201).json(response);
+  }
+);
 
 module.exports = router;

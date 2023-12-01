@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Venue.belongsTo(models.Group, { foreignKey: "groupId" });
     }
   }
   Venue.init(
@@ -32,10 +32,16 @@ module.exports = (sequelize, DataTypes) => {
       lat: {
         allowNull: false,
         type: DataTypes.DECIMAL,
+        validate: {
+          isFloat: { min: -90, max: 90 },
+        },
       },
       lng: {
         allowNull: false,
         type: DataTypes.DECIMAL,
+        validate: {
+          isFloat: { min: -180, max: 180 },
+        },
       },
     },
     {
