@@ -27,11 +27,12 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
+    options.tableName = "EventImages";
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(
-      "EventImage", // Set the table name directly here
+      options,
       {
-        url: { [Op.in]: ["image url"] },
+        eventId: { [Op.in]: [1] },
       },
       {}
     );

@@ -27,11 +27,12 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
+    options.tableName = "GroupImages";
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(
-      "GroupImages", // Set the table name directly here
+      options,
       {
-        url: { [Op.in]: ["image url"] },
+        groupId: { [Op.in]: [1] },
       },
       {}
     );
