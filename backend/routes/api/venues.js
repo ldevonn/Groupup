@@ -35,7 +35,7 @@ router.put("/:venueId", validateNewVenue, requireAuth, async (req, res) => {
   const group = await Group.findByPk(groupId);
 
   if (group.organizerId !== organizerId) {
-    return res.status(403).json({ message: "Permission Denied" });
+    return res.status(403).json({ message: "Forbidden" });
   }
 
   venue.address = address;
