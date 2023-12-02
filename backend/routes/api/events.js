@@ -176,7 +176,7 @@ router.post("/:eventId/images", requireAuth, async (req, res) => {
 });
 
 //edit an event
-router.put("/:eventId", validateNewEvent, requireAuth, async (req, res) => {
+router.put("/:eventId", requireAuth, validateNewEvent, async (req, res) => {
   const eventId = req.params.eventId;
   const {
     venueId,
@@ -231,5 +231,21 @@ router.put("/:eventId", validateNewEvent, requireAuth, async (req, res) => {
   };
 
   return res.json(response);
+});
+
+//delete an event
+router.delete("/:eventId", requireAuth, async (req, res) => {
+  const eventId = req.params.eventId;
+
+  const event = await Event.findOne({
+    where: { id: eventId },
+  });
+
+  if (!event) {
+    return res.status(404).json({ message: "Event couldn't be found" });
+  }
+
+  await event.destroy();
+  return res.json({ message: "Successfully deleted" });
 });
 module.exports = router;
