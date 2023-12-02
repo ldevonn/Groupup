@@ -4,6 +4,10 @@ module.exports = (sequelize, DataTypes) => {
   class Venue extends Model {
     static associate(models) {
       Venue.belongsTo(models.Group, { foreignKey: "groupId" });
+      Venue.hasMany(models.Event, {
+        foreignKey: "venueId",
+        onDelete: "CASCADE",
+      });
     }
   }
   Venue.init(

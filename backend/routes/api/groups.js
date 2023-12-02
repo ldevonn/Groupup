@@ -1,5 +1,12 @@
 const express = require("express");
-const { User, Group, GroupImage, Venue } = require("../../db/models");
+const {
+  User,
+  Group,
+  GroupImage,
+  Venue,
+  Event,
+  EventImage,
+} = require("../../db/models");
 const Sequelize = require("sequelize");
 const router = express.Router();
 const { requireAuth } = require("../../utils/auth.js");
@@ -42,6 +49,49 @@ const validateNewVenue = [
     .exists({ checkFalsy: true })
     .isFloat({ min: -180, max: 180 })
     .withMessage("Longitude must be between -180 and 180"),
+  handleValidationErrors,
+];
+
+const validateNewEvent = [
+  check("name")
+    .exists({ checkFalsy: true })
+    .isLength({ min: 5 })
+    .withMessage("Name must be at least 5 characters"),
+
+  check("type")
+    .exists({ checkFalsy: true })
+    .isIn(["Online", "In person"])
+    .withMessage("Type must be 'Online' or 'In person'"),
+
+  check("capacity")
+    .exists({ checkFalsy: true })
+    .isInt({ min: 0 })
+    .withMessage("Capacity must be an integer"),
+
+  check("price")
+    .exists({ checkFalsy: true })
+    .isFloat({ min: 0 })
+    .withMessage("Price is invalid"),
+
+  check("description")
+    .exists({ checkFalsy: true })
+    .withMessage("Description is required"),
+
+  check("startDate")
+    .custom((value, { req }) => {
+      const startDate = new Date(value);
+      const currentDate = new Date();
+      return startDate > currentDate;
+    })
+    .withMessage("Start date must be in the future"),
+
+  check("endDate")
+    .custom((value, { req }) => {
+      const startDate = new Date(req.body.startDate);
+      const endDate = new Date(value);
+      return endDate > startDate;
+    })
+    .withMessage("End date is less than start date"),
   handleValidationErrors,
 ];
 
@@ -352,6 +402,139 @@ router.post(
     };
 
     return res.status(201).json(response);
+  }
+);
+
+//get all events of a group specified by its id
+router.get("/:groupId/events", async (req, res) => {
+  const groupId = req.params.groupId;
+
+  const group = await Group.findByPk(groupId);
+  if (!group) {
+    return res.status(404).json({ message: "Group couldn't be found" });
+  }
+
+  const events = await Event.findAll({
+    where: { groupId: groupId },
+    attributes: {
+      exclude: ["price", "capacity", "description"],
+    },
+    include: [
+      {
+        model: Group,
+        attributes: ["id", "name", "city", "state"],
+      },
+      {
+        model: Venue,
+        attributes: ["id", "city", "state"],
+      },
+      {
+        model: EventImage,
+        attributes: ["url"],
+        where: { preview: true },
+        required: false,
+      },
+    ],
+  });
+
+  const formattedEvents = events.map((event) => {
+    const previewImage = event.EventImages.length
+      ? event.EventImages[0].url
+      : null;
+    const formattedEvent = {
+      id: event.id,
+      groupId: event.groupId,
+      venueId: event.venueId,
+      name: event.name,
+      type: event.type,
+      startDate: event.startDate,
+      endDate: event.endDate,
+      numAttending: event.numAttending,
+      previewImage: previewImage,
+      Group: {
+        id: event.Group.id,
+        name: event.Group.name,
+        city: event.Group.city,
+        state: event.Group.state,
+      },
+      Venue: event.Venue
+        ? {
+            id: event.Venue.id,
+            city: event.Venue.city,
+            state: event.Venue.state,
+          }
+        : null,
+    };
+    return formattedEvent;
+  });
+
+  return res.json({
+    Events: formattedEvents,
+  });
+});
+
+//create an event for a group
+router.post(
+  "/:groupId/events",
+  validateNewEvent,
+  requireAuth,
+  async (req, res) => {
+    //groupId
+    const groupId = req.params.groupId;
+    //organizerId
+    const organizerId = req.user.id;
+    //body params
+    const {
+      venueId,
+      name,
+      type,
+      capacity,
+      price,
+      description,
+      startDate,
+      endDate,
+    } = req.body;
+
+    //find and check group
+    const group = await Group.findByPk(groupId);
+    if (!group) {
+      return res.status(404).json({ message: "Group couldn't be found" });
+    }
+    if (group.organizerId !== organizerId) {
+      return res.status(403).json({ message: "Permission denied" });
+    }
+
+    //find and check venue
+    const venue = await Venue.findByPk(venueId);
+    if (!venue) {
+      return res.status(404).json({ message: "Venue couldn't be found" });
+    }
+
+    const newEvent = await Event.create({
+      venueId,
+      groupId,
+      name,
+      type,
+      capacity,
+      price,
+      description,
+      startDate,
+      endDate,
+    });
+
+    const response = {
+      id: newEvent.id,
+      groupId: newEvent.groupId,
+      name: newEvent.name,
+      type: newEvent.type,
+      capacity: newEvent.capacity,
+      price: newEvent.price,
+      description: newEvent.description,
+      startDate: newEvent.startDate,
+      endDate: newEvent.endDate,
+    };
+
+    return res.json(response);
   }
 );
 

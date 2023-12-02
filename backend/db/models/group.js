@@ -16,6 +16,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "groupId",
         onDelete: "CASCADE",
       });
+      Group.hasMany(models.Event, {
+        foreignKey: "groupId",
+        onDelete: "CASCADE",
+      });
     }
   }
   Group.init(

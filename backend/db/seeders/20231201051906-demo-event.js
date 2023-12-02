@@ -13,7 +13,7 @@ module.exports = {
       [
         {
           groupId: 1,
-          venueId: 1,
+          venueId: null,
           name: "Tennis Group First Meet and Greet",
           description:
             "First meet and greet event for the evening tennis on the water group! Join us online for happy times!",

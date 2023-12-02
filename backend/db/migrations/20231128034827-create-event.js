@@ -17,7 +17,7 @@ module.exports = {
           type: Sequelize.INTEGER,
         },
         venueId: {
-          allowNull: false,
+          allowNull: true,
           type: Sequelize.INTEGER,
         },
         groupId: {
