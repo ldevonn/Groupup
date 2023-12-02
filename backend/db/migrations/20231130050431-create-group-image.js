@@ -36,6 +36,7 @@ module.exports = {
     );
   },
   async down(queryInterface, Sequelize) {
+    options.tableName = "GroupImages";
     return queryInterface.dropTable(options);
   },
 };
