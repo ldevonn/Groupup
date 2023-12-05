@@ -107,7 +107,6 @@ router.post("/:groupId/membership", requireAuth, async (req, res) => {
 });
 
 //delete membership
-
 router.delete(
   "/:groupId/membership/:memberId",
   requireAuth,
@@ -149,5 +148,71 @@ router.delete(
     }
   }
 );
+
+//change status of membership for a group specified by id
+router.put("/:groupId/membership", requireAuth, async (req, res) => {
+  const { memberId, status } = req.body;
+  const groupId = req.params.groupId;
+  const group = await Group.findByPk(groupId);
+
+  //membership status for user requesting change
+  const userMembership = await Member.findOne({
+    where: { groupId: groupId, userId: req.user.id },
+  });
+
+  //membership status for user recieving change
+  const member = await Member.findOne({
+    where: { groupId: groupId, userId: memberId },
+  });
+  //if the user doesn't exist
+  const user = await User.findByPk(memberId);
+  if (!user) {
+    return res.status(404).json({ message: "User couldn't be found" });
+  }
+  //if group doesn't exist
+  if (!group) {
+    return res.status(404).json({ message: "Group couldn't be found" });
+  }
+  //if member doesn't exist
+  if (!member) {
+    return res.status(404).json({
+      message: "Membership between the user and the group does not exist",
+    });
+  }
+  //if changing membership status to 'pending'
+  if (status === "pending") {
+    return res.status(400).json({
+      message: "Bad Request",
+      errors: { status: "Cannot change a membership status to pending" },
+    });
+  }
+  if (status === "member") {
+    console.log(group.organizerId);
+    console.log(req.user.id);
+    console.log(userMembership.status);
+    if (
+      group.organizerId == req.user.id ||
+      userMembership.status == "co-host"
+    ) {
+      member.status = "member";
+    } else {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+  }
+  if (status === "co-host") {
+    if (group.organizerId == req.user.id) {
+      member.status = "co-host";
+    } else {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+  }
+
+  return res.json({
+    id: member.id,
+    groupId: parseInt(groupId),
+    memberId: member.userId,
+    status: member.status,
+  });
+});
 
 module.exports = router;
