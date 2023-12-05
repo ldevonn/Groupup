@@ -1,29 +1,16 @@
 const express = require("express");
-const { Group, Event, Member, User, EventImage } = require("../../db/models");
-const { Sequelize, Op } = require("sequelize");
 const router = express.Router();
 const { requireAuth } = require("../../utils/auth.js");
-const { check } = require("express-validator");
-const { handleValidationErrors } = require("../../utils/validation.js");
+const { noImage, userValidate } = require("../../utils/checks.js");
 
-//delete image for group
+//delete image for event
 router.delete("/:imageId", requireAuth, async (req, res) => {
-  const imageId = req.params.imageId;
-  const image = await EventImage.findByPk(imageId);
-  if (!image) {
+  if ((await noImage("event", req.params.imageId)) === true) {
     return res.status(404).json({ message: "Event Image couldn't be found" });
   }
+  let image = await noImage("event", req.params.imageId);
 
-  const userMember = await Member.findOne({
-    where: { userId: req.user.id },
-  });
-
-  const eventId = image.eventId;
-
-  const event = await Event.findByPk(eventId);
-  const group = await Group.findByPk(event.groupId);
-
-  if (userMember.status == "co-host" || group.organizerId === req.user.id) {
+  if (await userValidate(req.user.id)) {
     await image.destroy();
     res.json({ message: "Successfully deleted" });
   } else {
