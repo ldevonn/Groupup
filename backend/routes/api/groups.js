@@ -28,7 +28,7 @@ const validateNewGroup = [
     .withMessage("Type must be 'Online' or 'In person'"),
   check("private")
     .exists({ checkFalsy: true })
-    .isBoolean(true)
+    .isBoolean()
     .withMessage("Private must be a boolean"),
   check("city").exists({ checkFalsy: true }).withMessage("City is required"),
   check("state").exists({ checkFalsy: true }).withMessage("State is required"),
@@ -239,7 +239,7 @@ router.delete("/:groupId", requireAuth, async (req, res) => {
 });
 
 //create a group
-router.post("/", validateNewGroup, requireAuth, async (req, res) => {
+router.post("/", requireAuth, validateNewGroup, async (req, res) => {
   const { name, about, type, private, city, state } = req.body;
 
   const organizerId = req.user.id;
@@ -271,7 +271,7 @@ router.post("/", validateNewGroup, requireAuth, async (req, res) => {
 });
 
 //edit a group
-router.put("/:groupId", validateNewGroup, requireAuth, async (req, res) => {
+router.put("/:groupId", requireAuth, validateNewGroup, async (req, res) => {
   const groupId = req.params.groupId;
   const { name, about, type, private, city, state } = req.body;
 
@@ -365,8 +365,8 @@ router.get("/:groupId/venues", requireAuth, async (req, res) => {
 
 router.post(
   "/:groupId/venues",
-  validateNewVenue,
   requireAuth,
+  validateNewVenue,
   async (req, res) => {
     const groupId = req.params.groupId;
     const organizerId = req.user.id;
@@ -476,8 +476,8 @@ router.get("/:groupId/events", async (req, res) => {
 //create an event for a group
 router.post(
   "/:groupId/events",
-  validateNewEvent,
   requireAuth,
+  validateNewEvent,
   async (req, res) => {
     //groupId
     const groupId = req.params.groupId;

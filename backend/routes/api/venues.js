@@ -23,7 +23,7 @@ const validateNewVenue = [
   handleValidationErrors,
 ];
 
-router.put("/:venueId", validateNewVenue, requireAuth, async (req, res) => {
+router.put("/:venueId", requireAuth, validateNewVenue, async (req, res) => {
   const { address, city, state, lat, lng } = req.body;
   const organizerId = req.user.id;
   const venueId = req.params.venueId;
