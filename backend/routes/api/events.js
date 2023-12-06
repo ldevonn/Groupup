@@ -1,56 +1,29 @@
 const express = require("express");
 const { Event, Group, Venue, EventImage } = require("../../db/models");
-const Sequelize = require("sequelize");
 const router = express.Router();
 const { requireAuth } = require("../../utils/auth.js");
-const { check } = require("express-validator");
-const { handleValidationErrors } = require("../../utils/validation.js");
-
-const validateNewEvent = [
-  check("name")
-    .exists({ checkFalsy: true })
-    .isLength({ min: 5 })
-    .withMessage("Name must be at least 5 characters"),
-
-  check("type")
-    .exists({ checkFalsy: true })
-    .isIn(["Online", "In person"])
-    .withMessage("Type must be 'Online' or 'In person'"),
-
-  check("capacity")
-    .exists({ checkFalsy: true })
-    .isInt({ min: 0 })
-    .withMessage("Capacity must be an integer"),
-
-  check("price")
-    .exists({ checkFalsy: true })
-    .isFloat({ min: 0 })
-    .withMessage("Price is invalid"),
-
-  check("description")
-    .exists({ checkFalsy: true })
-    .withMessage("Description is required"),
-
-  check("startDate")
-    .custom((value, { req }) => {
-      const startDate = new Date(value);
-      const currentDate = new Date();
-      return startDate > currentDate;
-    })
-    .withMessage("Start date must be in the future"),
-
-  check("endDate")
-    .custom((value, { req }) => {
-      const startDate = new Date(req.body.startDate);
-      const endDate = new Date(value);
-      return endDate > startDate;
-    })
-    .withMessage("End date is less than start date"),
-  handleValidationErrors,
-];
+const {
+  validateNewEvent,
+  validateQueries,
+  pagination,
+} = require("../../utils/validation.js");
 
 //get all events
-router.get("/", async (req, res) => {
+router.get("/", validateQueries, async (req, res) => {
+  let where = {};
+  //name
+  if (req.query.name) {
+    where.name = req.query.name;
+  }
+  //type
+  if (req.query.type) {
+    where.type = req.query.type;
+  }
+  //startDate
+  if (req.query.startDate) {
+    where.startDate = req.query.startDate;
+  }
+
   const events = await Event.findAll({
     attributes: {
       exclude: ["price", "capacity", "description"],
@@ -69,6 +42,9 @@ router.get("/", async (req, res) => {
         attributes: ["url"],
       },
     ],
+    where,
+    limit: pagination(req.query.page, req.query.size)[0],
+    offset: pagination(req.query.page, req.query.size)[1],
   });
 
   const formattedEvents = events.map((event) => {
