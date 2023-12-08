@@ -26,10 +26,7 @@ const validateNewGroup = [
     .exists({ checkFalsy: true })
     .isIn(["Online", "In person"])
     .withMessage("Type must be 'Online' or 'In person'"),
-  check("private")
-    .exists({ checkFalsy: true })
-    .isBoolean()
-    .withMessage("Private must be a boolean"),
+  check("private").isBoolean().withMessage("Private must be a boolean"),
   check("city").exists({ checkFalsy: true }).withMessage("City is required"),
   check("state").exists({ checkFalsy: true }).withMessage("State is required"),
   handleValidationErrors,
@@ -401,7 +398,7 @@ router.post(
       lng: newVenue.lng,
     };
 
-    return res.status(201).json(response);
+    return res.status(200).json(response);
   }
 );
 
@@ -523,8 +520,7 @@ router.post(
     });
 
     const response = {
-      id: newEvent.id,
-      groupId: newEvent.groupId,
+      venueId: newEvent.id,
       name: newEvent.name,
       type: newEvent.type,
       capacity: newEvent.capacity,

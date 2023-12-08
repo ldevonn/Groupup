@@ -5,22 +5,31 @@ const { User } = require("../../db/models");
 const router = express.Router();
 const { check } = require("express-validator");
 const { validationResult } = require("express-validator");
-
+let errType;
 const handleUserValidationErrors = (req, res, next) => {
   const validationErrors = validationResult(req);
 
   if (!validationErrors.isEmpty()) {
+    let err;
     const errors = {};
     validationErrors
       .array()
       .forEach((error) => (errors[error.path] = error.msg));
 
-    const err = {
-      message: "User already exists",
-      errors: errors,
-    };
-
-    return res.status(500).json(err);
+    if (errType == "duplicate") {
+      errType = undefined;
+      err = {
+        message: "User already exists",
+        errors: errors,
+      };
+      return res.status(500).json(err);
+    } else {
+      err = {
+        message: "Bad Request",
+        errors: errors,
+      };
+      return res.status(400).json(err);
+    }
   }
 
   next();
@@ -34,6 +43,7 @@ const validateSignup = [
     .custom(async (value) => {
       const user = await User.findOne({ where: { email: value } });
       if (user) {
+        errType = "duplicate";
         throw new Error("User with that email already exists");
       }
       return true;
@@ -45,6 +55,7 @@ const validateSignup = [
     .custom(async (value) => {
       const user = await User.findOne({ where: { username: value } });
       if (user) {
+        errType = "duplicate";
         throw new Error("User with that username already exists");
       }
       return true;

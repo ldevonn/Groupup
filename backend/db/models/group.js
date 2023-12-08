@@ -52,9 +52,6 @@ module.exports = (sequelize, DataTypes) => {
       private: {
         allowNull: false,
         type: DataTypes.BOOLEAN,
-        validate: {
-          isBoolean: true,
-        },
       },
       city: {
         allowNull: false,
