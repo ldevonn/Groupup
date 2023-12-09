@@ -217,19 +217,17 @@ router.get("/:groupId", async (req, res) => {
   const numMembers = await getMembers(group.id);
 
   return res.json({
-    Groups: {
-      id: group.id,
-      organizerId: group.organizerId,
-      name: group.name,
-      about: group.about,
-      type: group.type,
-      private: group.private,
-      city: group.city,
-      state: group.state,
-      createdAt: group.createdAt,
-      updatedAt: group.updatedAt,
-      numMembers,
-    },
+    id: group.id,
+    organizerId: group.organizerId,
+    name: group.name,
+    about: group.about,
+    type: group.type,
+    private: group.private,
+    city: group.city,
+    state: group.state,
+    createdAt: group.createdAt,
+    updatedAt: group.updatedAt,
+    numMembers,
     groupImages: group.GroupImages,
     Organizer: group.User,
     Venues: group.Venues,
@@ -296,9 +294,7 @@ router.put("/:groupId", requireAuth, validateNewGroup, async (req, res) => {
   }
 
   if (req.user.id !== group.organizerId) {
-    return res
-      .status(403)
-      .json({ error: "You are not the organizer of this group" });
+    return res.status(403).json({ error: "Forbidden" });
   }
 
   group.name = name;

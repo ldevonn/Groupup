@@ -1,5 +1,11 @@
 const express = require("express");
-const { Event, Group, Venue, EventImage } = require("../../db/models");
+const {
+  Attendee,
+  Event,
+  Group,
+  Venue,
+  EventImage,
+} = require("../../db/models");
 const router = express.Router();
 const { requireAuth } = require("../../utils/auth.js");
 const {
@@ -7,6 +13,15 @@ const {
   validateQueries,
   pagination,
 } = require("../../utils/validation.js");
+
+async function getNumAttending(eventId) {
+  numAttending = await Attendee.count({
+    where: {
+      eventId: eventId,
+    },
+  });
+  return numAttending;
+}
 
 //get all events
 router.get("/", validateQueries, async (req, res) => {
@@ -47,40 +62,42 @@ router.get("/", validateQueries, async (req, res) => {
     offset: pagination(req.query.page, req.query.size)[1],
   });
 
-  const formattedEvents = events.map((event) => {
-    const previewImage = event.EventImages.length
-      ? event.EventImages[0].url
-      : null;
-    const formattedEvent = {
-      id: event.id,
-      groupId: event.groupId,
-      venueId: event.venueId,
-      name: event.name,
-      type: event.type,
-      startDate: event.startDate,
-      endDate: event.endDate,
-      numAttending: "REPLACE THIS",
-      previewImage: previewImage,
-      Group: {
-        id: event.Group.id,
-        name: event.Group.name,
-        city: event.Group.city,
-        state: event.Group.state,
-      },
-      Venue: event.Venue
-        ? {
-            id: event.Venue.id,
-            city: event.Venue.city,
-            state: event.Venue.state,
-          }
-        : null,
-    };
-    return formattedEvent;
-  });
+  const formattedEvents = await Promise.all(
+    events.map(async (event) => {
+      const previewImage = event.EventImages.length
+        ? event.EventImages[0].url
+        : null;
 
-  return res.json({
-    Events: formattedEvents,
-  });
+      const numAttending = await getNumAttending(event.id);
+
+      const formattedEvent = {
+        id: event.id,
+        groupId: event.groupId,
+        venueId: event.venueId,
+        name: event.name,
+        type: event.type,
+        startDate: event.startDate,
+        endDate: event.endDate,
+        numAttending,
+        previewImage: previewImage,
+        Group: {
+          id: event.Group.id,
+          name: event.Group.name,
+          city: event.Group.city,
+          state: event.Group.state,
+        },
+        Venue: event.Venue
+          ? {
+              id: event.Venue.id,
+              city: event.Venue.city,
+              state: event.Venue.state,
+            }
+          : null,
+      };
+      return formattedEvent;
+    })
+  );
+  return res.json({ Events: formattedEvents });
 });
 
 //get event by id
@@ -105,6 +122,8 @@ router.get("/:eventId", async (req, res) => {
     return res.status(404).json({ message: "Event couldn't be found" });
   }
 
+  const numAttending = await getNumAttending(event.id);
+
   return res.json({
     id: event.id,
     groupId: event.groupId,
@@ -113,11 +132,10 @@ router.get("/:eventId", async (req, res) => {
     description: event.description,
     type: event.type,
     capacity: event.capacity,
-    //
     price: event.price,
     startDate: event.startDate,
     endDate: event.endDate,
-    numAttending: "REPLACE THIS",
+    numAttending,
     name: event.name,
     description: event.description,
     type: event.type,
@@ -130,15 +148,17 @@ router.get("/:eventId", async (req, res) => {
 
 //add image to event
 router.post("/:eventId/images", requireAuth, async (req, res) => {
-  const { url, preview } = req.body;
   const eventId = req.params.eventId;
+  const { url, preview } = req.body;
+
   const event = await Event.findByPk(eventId);
+
   if (!event)
     return res.status(404).json({ message: "Event couldn't be found" });
 
   const newImage = await EventImage.create({
-    eventId,
     url,
+    eventId,
     preview,
   });
 

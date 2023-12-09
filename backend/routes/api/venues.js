@@ -23,6 +23,7 @@ const validateNewVenue = [
   handleValidationErrors,
 ];
 
+//edit venue by venue id
 router.put("/:venueId", requireAuth, validateNewVenue, async (req, res) => {
   const { address, city, state, lat, lng } = req.body;
   const organizerId = req.user.id;
@@ -44,7 +45,7 @@ router.put("/:venueId", requireAuth, validateNewVenue, async (req, res) => {
   venue.lat = lat;
   venue.lng = lng;
 
-  await group.save();
+  await venue.save();
 
   const response = {
     id: venue.id,
