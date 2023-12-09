@@ -99,7 +99,6 @@ router.get("/", async (req, res) => {
       {
         model: GroupImage,
         where: {
-          groupId: Group.sequelize.col("Group.id"),
           preview: true,
         },
         required: false,
