@@ -15,7 +15,7 @@ const {
 } = require("../../utils/validation.js");
 
 async function getNumAttending(eventId) {
-  numAttending = await Attendee.count({
+  let numAttending = await Attendee.count({
     where: {
       eventId: eventId,
     },
@@ -62,14 +62,16 @@ router.get("/", validateQueries, async (req, res) => {
     offset: pagination(req.query.page, req.query.size)[1],
   });
 
+  if (events.length == 0) {
+    return res.json({ events: [] });
+  }
+
   const formattedEvents = await Promise.all(
     events.map(async (event) => {
       const previewImage = event.EventImages.length
         ? event.EventImages[0].url
         : null;
-
       const numAttending = await getNumAttending(event.id);
-
       const formattedEvent = {
         id: event.id,
         groupId: event.groupId,

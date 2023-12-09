@@ -93,7 +93,7 @@ const validateNewEvent = [
   handleValidationErrors,
 ];
 async function getMembers(groupId) {
-  numMembers = await Member.count({
+  let numMembers = await Member.count({
     where: {
       groupId: groupId,
     },
