@@ -6,6 +6,7 @@ const {
   Venue,
   Event,
   EventImage,
+  Member,
 } = require("../../db/models");
 const { Op, Sequelize } = require("sequelize");
 const router = express.Router();
@@ -91,10 +92,17 @@ const validateNewEvent = [
     .withMessage("End date is less than start date"),
   handleValidationErrors,
 ];
-
+async function getMembers(groupId) {
+  numMembers = await Member.count({
+    where: {
+      groupId: groupId,
+    },
+  });
+  return numMembers;
+}
 //get all groups
 router.get("/", async (req, res) => {
-  const groups = await Group.scope("withMemberCount").findAll({
+  const groups = await Group.findAll({
     include: [
       {
         model: GroupImage,
@@ -106,79 +114,86 @@ router.get("/", async (req, res) => {
     ],
   });
 
-  const formattedGroups = groups.map((group) => {
-    const previewImages = group.GroupImages.filter((image) => image.preview);
-    let previewImage = null;
+  const formattedResult = await Promise.all(
+    groups.map(async (group) => {
+      const previewImages = group.GroupImages.filter((image) => image.preview);
+      let previewImage = null;
 
-    if (previewImages.length > 0) {
-      previewImage = previewImages[0].url;
-    }
+      if (previewImages.length > 0) {
+        previewImage = previewImages[0].url;
+      }
+      let numMembers = await getMembers(group.id);
 
-    return {
-      id: group.id,
-      organizerId: group.organizerId,
-      name: group.name,
-      about: group.about,
-      type: group.type,
-      private: group.private,
-      city: group.city,
-      state: group.state,
-      createdAt: group.createdAt,
-      updatedAt: group.updatedAt,
-      numMembers: group.getDataValue("numMembers"),
-      previewImage,
-    };
-  });
-  return res.json({ Groups: formattedGroups });
+      return {
+        id: group.id,
+        organizerId: group.organizerId,
+        name: group.name,
+        about: group.about,
+        type: group.type,
+        private: group.private,
+        city: group.city,
+        state: group.state,
+        createdAt: group.createdAt,
+        updatedAt: group.updatedAt,
+        numMembers,
+        previewImage,
+      };
+    })
+  );
+
+  return res.json({ Groups: formattedResult });
 });
 
 //get groups created by authenticated current user
 router.get("/current", requireAuth, async (req, res) => {
   const userId = req.user.id;
-  const groups = await Group.scope("withMemberCount").findAll({
+  const groups = await Group.findAll({
     where: { organizerId: userId },
     include: [
       {
         model: GroupImage,
         where: {
-          groupId: Group.sequelize.col("Group.id"),
-          preview: true,
+          preview: { [Sequelize.Op.eq]: true },
         },
         required: false,
       },
     ],
   });
 
-  const formattedGroups = groups.map((group) => {
-    const previewImages = group.GroupImages.filter((image) => image.preview);
-    let previewImage = null;
+  const formattedResult = await Promise.all(
+    groups.map(async (group) => {
+      const previewImages = group.GroupImages.filter((image) => image.preview);
+      let previewImage = null;
 
-    if (previewImages.length > 0) {
-      previewImage = previewImages[0].url;
-    }
+      if (previewImages.length > 0) {
+        previewImage = previewImages[0].url;
+      }
+      let numMembers = await getMembers(group.id);
 
-    return {
-      id: group.id,
-      organizerId: group.organizerId,
-      name: group.name,
-      about: group.about,
-      type: group.type,
-      private: group.private,
-      city: group.city,
-      state: group.state,
-      createdAt: group.createdAt,
-      updatedAt: group.updatedAt,
-      numMembers: group.getDataValue("numMembers"),
-      previewImage: previewImage,
-    };
-  });
-  return res.json({ Groups: formattedGroups });
+      return {
+        id: group.id,
+        organizerId: group.organizerId,
+        name: group.name,
+        about: group.about,
+        type: group.type,
+        private: group.private,
+        city: group.city,
+        state: group.state,
+        createdAt: group.createdAt,
+        updatedAt: group.updatedAt,
+        numMembers,
+        previewImage,
+      };
+    })
+  );
+
+  return res.json({ Groups: formattedResult });
 });
 
 //get details of a group from it's id
 router.get("/:groupId", async (req, res) => {
   const groupId = req.params.groupId;
-  const group = await Group.scope("withMemberCount").findOne({
+  const group = await Group.findOne({
     where: { id: groupId },
     include: [
       {
@@ -198,6 +213,9 @@ router.get("/:groupId", async (req, res) => {
   if (!group) {
     return res.status(404).json({ message: "Group couldn't be found" });
   }
+
+  const numMembers = await getMembers(group.id);
+
   return res.json({
     Groups: {
       id: group.id,
@@ -210,7 +228,7 @@ router.get("/:groupId", async (req, res) => {
       state: group.state,
       createdAt: group.createdAt,
       updatedAt: group.updatedAt,
-      numMembers: group.getDataValue("numMembers"),
+      numMembers,
     },
     groupImages: group.GroupImages,
     Organizer: group.User,

@@ -6,6 +6,8 @@ module.exports = (sequelize, DataTypes) => {
       Group.belongsTo(models.User, { foreignKey: "organizerId" });
       Group.hasMany(models.Member, {
         foreignKey: "groupId",
+        sourceKey: "id",
+        targetKey: "groupId",
         onDelete: "CASCADE",
       });
       Group.hasMany(models.GroupImage, {
