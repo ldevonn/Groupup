@@ -242,6 +242,10 @@ router.delete("/:groupId", requireAuth, async (req, res) => {
     where: { id: groupId },
   });
 
+  if (req.user.id !== group.organizerId) {
+    return res.status(403).json({ message: "Forbidden" });
+  }
+
   if (!group) {
     return res.status(404).json({ message: "Group couldn't be found" });
   }
@@ -332,6 +336,10 @@ router.post("/:groupId/images", requireAuth, async (req, res) => {
 
   if (!group) {
     return res.status(404).json({ message: "Group couldn't be found" });
+  }
+
+  if (req.user.id !== group.organizerId) {
+    return res.status(403).json({ message: "Forbidden" });
   }
 
   const newImage = await GroupImage.create({

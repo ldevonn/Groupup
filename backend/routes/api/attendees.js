@@ -65,17 +65,26 @@ router.post("/:eventId/attendance", requireAuth, async (req, res) => {
     return res.status(404).json({ message: "Event couldn't be found" });
 
   //user has pending attendance
-  if (attendance.status == "pending") {
+  if (attendance && attendance.status == "pending") {
     return res
       .status(400)
       .json({ message: "Attendance has already been requested" });
   }
 
   //user is already accepted
-  if (attendance.status == "attending") {
+  if (attendance && attendance.status == "attending") {
     return res
       .status(400)
       .json({ message: "User is already an attendee of the event" });
+  }
+
+  if (!attendance) {
+    const newAttendance = await Attendee.create({
+      userId: userId,
+      eventId: eventId,
+      status: "pending",
+    });
+    return res.json({ userId: userId, status: newAttendance.status });
   }
 
   attendance.status = "pending";

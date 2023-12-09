@@ -24,6 +24,7 @@ async function userValidate(reqId) {
 
   const groupId = user.groupId;
   const group = await Group.findByPk(groupId);
+  console.log(group);
 
   return user.status == "co-host" || group.organizerId === reqId;
 }
