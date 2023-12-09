@@ -7,7 +7,7 @@ const {
   Event,
   EventImage,
 } = require("../../db/models");
-const Sequelize = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 const router = express.Router();
 const { requireAuth } = require("../../utils/auth.js");
 const { check } = require("express-validator");
@@ -99,7 +99,7 @@ router.get("/", async (req, res) => {
       {
         model: GroupImage,
         where: {
-          preview: true,
+          preview: { [Sequelize.Op.eq]: true },
         },
         required: false,
       },
