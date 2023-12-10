@@ -151,17 +151,21 @@ router.get("/:eventId", async (req, res) => {
 
 //add image to event
 router.post("/:eventId/images", requireAuth, async (req, res) => {
+  const { url, preview } = req.body;
   let newImage;
   const eventId = req.params.eventId;
+
+  //finds attendee matching user if exists
   const attendee = await Attendee.findOne({
     where: { userId: req.user.id, eventId: eventId },
   });
-  const { url, preview } = req.body;
+
   const event = await Event.findByPk(eventId);
   if (!event) {
     return res.status(404).json({ message: "Event couldn't be found" });
   }
 
+  //if there is an attendee, and they are attending the event
   if (attendee && attendee.status == "attending") {
     newImage = await EventImage.create({
       url,
@@ -173,6 +177,12 @@ router.post("/:eventId/images", requireAuth, async (req, res) => {
       return res.status(403).json({ message: "Forbidden" });
     }
   }
+
+  newImage = await EventImage.create({
+    url,
+    eventId,
+    preview,
+  });
 
   const response = {
     id: newImage.id,

@@ -7,6 +7,7 @@ const {
   Event,
   EventImage,
   Member,
+  Attendee,
 } = require("../../db/models");
 const { Op, Sequelize } = require("sequelize");
 const router = express.Router();
@@ -329,6 +330,7 @@ router.put("/:groupId", requireAuth, validateNewGroup, async (req, res) => {
 //add image to group based on groups id
 
 router.post("/:groupId/images", requireAuth, async (req, res) => {
+  let newImage;
   const groupId = req.params.groupId;
   const { url, preview } = req.body;
 
@@ -338,15 +340,15 @@ router.post("/:groupId/images", requireAuth, async (req, res) => {
     return res.status(404).json({ message: "Group couldn't be found" });
   }
 
-  if (!(await userValidate(req.user.id, groupId))) {
+  if (req.user.id !== group.organizerId) {
     return res.status(403).json({ message: "Forbidden" });
+  } else {
+    newImage = await GroupImage.create({
+      url,
+      groupId,
+      preview,
+    });
   }
-
-  const newImage = await GroupImage.create({
-    url,
-    groupId,
-    preview,
-  });
 
   const response = {
     id: newImage.id,
