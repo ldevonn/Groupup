@@ -393,7 +393,7 @@ router.post(
   validateNewVenue,
   async (req, res) => {
     const groupId = req.params.groupId;
-    const { address, city, state, lat, lng } = req.body;
+    let { address, city, state, lat, lng } = req.body;
 
     lat = Number(lat);
     lng = Number(lng);
@@ -508,7 +508,7 @@ router.post(
     //groupId
     const groupId = req.params.groupId;
     //body params
-    const {
+    let {
       venueId,
       name,
       type,
