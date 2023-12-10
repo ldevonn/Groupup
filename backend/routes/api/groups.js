@@ -395,6 +395,9 @@ router.post(
     const groupId = req.params.groupId;
     const { address, city, state, lat, lng } = req.body;
 
+    lat = Number(lat);
+    lng = Number(lng);
+
     const group = await Group.findByPk(groupId);
 
     if (!group) {
@@ -515,6 +518,8 @@ router.post(
       startDate,
       endDate,
     } = req.body;
+
+    price = Number(price);
 
     //find and check group
     const group = await Group.findByPk(groupId);

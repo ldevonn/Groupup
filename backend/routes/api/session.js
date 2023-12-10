@@ -3,10 +3,29 @@ const { Op } = require("sequelize");
 const bcrypt = require("bcryptjs");
 const { setTokenCookie, restoreUser } = require("../../utils/auth");
 const { User } = require("../../db/models");
-const { check } = require("express-validator");
-const { handleValidationErrors } = require("../../utils/validation");
+const { check, validationResult } = require("express-validator");
 
 const router = express.Router();
+
+const handleUserValidationErrors = (req, res, next) => {
+  const validationErrors = validationResult(req);
+
+  if (!validationErrors.isEmpty()) {
+    const errors = {};
+    validationErrors
+      .array()
+      .forEach((error) => (errors[error.path] = error.msg));
+
+    const err = {
+      message: "Bad Request",
+      errors: errors,
+    };
+
+    return res.status(401).json(err);
+  }
+
+  next();
+};
 
 const validateLogin = [
   check("credential")
@@ -16,7 +35,7 @@ const validateLogin = [
   check("password")
     .exists({ checkFalsy: true })
     .withMessage("Password is required"),
-  handleValidationErrors,
+  handleUserValidationErrors,
 ];
 
 //login authentication
