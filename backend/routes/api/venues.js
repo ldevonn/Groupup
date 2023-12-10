@@ -6,6 +6,8 @@ const { requireAuth } = require("../../utils/auth.js");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation.js");
 
+const { userValidate } = require("../../utils/checks.js");
+
 const validateNewVenue = [
   check("address")
     .exists({ checkFalsy: true })
@@ -35,7 +37,7 @@ router.put("/:venueId", requireAuth, validateNewVenue, async (req, res) => {
   const groupId = venue.groupId;
   const group = await Group.findByPk(groupId);
 
-  if (group.organizerId !== organizerId) {
+  if (!(await userValidate(req.user.id, groupId))) {
     return res.status(403).json({ message: "Forbidden" });
   }
 

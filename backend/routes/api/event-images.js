@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { Event } = require("../../db/models");
 const { requireAuth } = require("../../utils/auth.js");
 const { noImage, userValidate } = require("../../utils/checks.js");
 
@@ -10,7 +11,9 @@ router.delete("/:imageId", requireAuth, async (req, res) => {
   }
   let image = await noImage("event", req.params.imageId);
 
-  if (await userValidate(req.user.id)) {
+  const event = await Event.findByPk(image.eventId);
+
+  if (await userValidate(req.user.id, event.groupId)) {
     await image.destroy();
     res.json({ message: "Successfully deleted" });
   } else {

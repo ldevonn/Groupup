@@ -10,7 +10,7 @@ router.delete("/:imageId", requireAuth, async (req, res) => {
   }
   let image = await noImage("group", req.params.imageId);
 
-  if (await userValidate(req.user.id)) {
+  if (await userValidate(req.user.id, image.groupId)) {
     await image.destroy();
     res.json({ message: "Successfully deleted" });
   } else {

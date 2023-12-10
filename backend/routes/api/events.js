@@ -14,6 +14,7 @@ const {
   pagination,
 } = require("../../utils/validation.js");
 
+const { userValidate } = require("../../utils/checks.js");
 async function getNumAttending(eventId) {
   let numAttending = await Attendee.count({
     where: {
@@ -150,19 +151,28 @@ router.get("/:eventId", async (req, res) => {
 
 //add image to event
 router.post("/:eventId/images", requireAuth, async (req, res) => {
+  let newImage;
   const eventId = req.params.eventId;
-  const { url, preview } = req.body;
-
-  const event = await Event.findByPk(eventId);
-
-  if (!event)
-    return res.status(404).json({ message: "Event couldn't be found" });
-
-  const newImage = await EventImage.create({
-    url,
-    eventId,
-    preview,
+  const attendee = await Attendee.findOne({
+    where: { userId: req.user.id, eventId: eventId },
   });
+  const { url, preview } = req.body;
+  const event = await Event.findByPk(eventId);
+  if (!event) {
+    return res.status(404).json({ message: "Event couldn't be found" });
+  }
+
+  if (attendee && attendee.status == "attending") {
+    newImage = await EventImage.create({
+      url,
+      eventId,
+      preview,
+    });
+  } else {
+    if (!(await userValidate(req.user.id, event.groupId))) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+  }
 
   const response = {
     id: newImage.id,
@@ -189,7 +199,7 @@ router.put("/:eventId", requireAuth, validateNewEvent, async (req, res) => {
 
   const venue = await Venue.findByPk(venueId);
   if (!venue) {
-    return res.status(404).json({ message: "Group couldn't be found" });
+    return res.status(404).json({ message: "Venue couldn't be found" });
   }
 
   const group = await Group.findByPk(venue.groupId);
@@ -199,10 +209,8 @@ router.put("/:eventId", requireAuth, validateNewEvent, async (req, res) => {
     return res.status(404).json({ message: "Event couldn't be found" });
   }
 
-  if (req.user.id !== group.organizerId) {
-    return res
-      .status(403)
-      .json({ error: "You are not the organizer of this group" });
+  if (!(await userValidate(req.user.id, group.id))) {
+    return res.status(403).json({ message: "Forbidden" });
   }
 
   event.venueId = venueId;
@@ -219,6 +227,7 @@ router.put("/:eventId", requireAuth, validateNewEvent, async (req, res) => {
   const response = {
     id: event.id,
     groupId: event.groupId,
+    venueId: event.venueId,
     name: event.name,
     type: event.type,
     capacity: event.capacity,
@@ -243,7 +252,11 @@ router.delete("/:eventId", requireAuth, async (req, res) => {
     return res.status(404).json({ message: "Event couldn't be found" });
   }
 
-  await event.destroy();
-  return res.json({ message: "Successfully deleted" });
+  if (!(await userValidate(req.user.id, event.groupId))) {
+    return res.status(403).json({ message: "Forbidden" });
+  } else {
+    await event.destroy();
+    return res.json({ message: "Successfully deleted" });
+  }
 });
 module.exports = router;

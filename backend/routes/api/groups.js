@@ -13,6 +13,7 @@ const router = express.Router();
 const { requireAuth } = require("../../utils/auth.js");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation.js");
+const { userValidate } = require("../../utils/checks.js");
 
 const validateNewGroup = [
   check("name")
@@ -241,17 +242,16 @@ router.delete("/:groupId", requireAuth, async (req, res) => {
   const group = await Group.findOne({
     where: { id: groupId },
   });
-
-  if (req.user.id !== group.organizerId) {
-    return res.status(403).json({ message: "Forbidden" });
-  }
-
   if (!group) {
     return res.status(404).json({ message: "Group couldn't be found" });
   }
 
-  await group.destroy();
-  return res.json({ message: "Successfully deleted" });
+  if (req.user.id !== group.organizerId) {
+    return res.status(403).json({ message: "Forbidden" });
+  } else {
+    await group.destroy();
+    return res.json({ message: "Successfully deleted" });
+  }
 });
 
 //create a group
@@ -298,7 +298,7 @@ router.put("/:groupId", requireAuth, validateNewGroup, async (req, res) => {
   }
 
   if (req.user.id !== group.organizerId) {
-    return res.status(403).json({ error: "Forbidden" });
+    return res.status(403).json({ message: "Forbidden" });
   }
 
   group.name = name;
@@ -338,7 +338,7 @@ router.post("/:groupId/images", requireAuth, async (req, res) => {
     return res.status(404).json({ message: "Group couldn't be found" });
   }
 
-  if (req.user.id !== group.organizerId) {
+  if (!(await userValidate(req.user.id, groupId))) {
     return res.status(403).json({ message: "Forbidden" });
   }
 
@@ -367,16 +367,20 @@ router.get("/:groupId/venues", requireAuth, async (req, res) => {
     return res.status(404).json({ message: "Group couldn't be found" });
   }
 
-  const venues = await Venue.findAll({
-    attributes: {
-      exclude: ["createdAt", "updatedAt"],
-    },
-    where: {
-      groupId: groupId,
-    },
-  });
+  if (!(await userValidate(req.user.id, groupId))) {
+    return res.status(403).json({ message: "Forbidden" });
+  } else {
+    const venues = await Venue.findAll({
+      attributes: {
+        exclude: ["createdAt", "updatedAt"],
+      },
+      where: {
+        groupId: groupId,
+      },
+    });
 
-  return res.json({ Venues: venues });
+    return res.json({ Venues: venues });
+  }
 });
 
 //create new venue for group specified by its id
@@ -387,7 +391,6 @@ router.post(
   validateNewVenue,
   async (req, res) => {
     const groupId = req.params.groupId;
-    const organizerId = req.user.id;
     const { address, city, state, lat, lng } = req.body;
 
     const group = await Group.findByPk(groupId);
@@ -396,8 +399,8 @@ router.post(
       return res.status(404).json({ message: "Group couldn't be found" });
     }
 
-    if (group.organizerId !== organizerId) {
-      return res.status(403).json({ message: "Permission denied" });
+    if (!(await userValidate(req.user.id, groupId))) {
+      return res.status(403).json({ message: "Forbidden" });
     }
 
     const newVenue = await Venue.create({
@@ -499,8 +502,6 @@ router.post(
   async (req, res) => {
     //groupId
     const groupId = req.params.groupId;
-    //organizerId
-    const organizerId = req.user.id;
     //body params
     const {
       venueId,
@@ -518,8 +519,8 @@ router.post(
     if (!group) {
       return res.status(404).json({ message: "Group couldn't be found" });
     }
-    if (group.organizerId !== organizerId) {
-      return res.status(403).json({ message: "Permission denied" });
+    if (!(await userValidate(req.user.id, groupId))) {
+      return res.status(403).json({ message: "Forbidden" });
     }
 
     //find and check venue
@@ -541,7 +542,9 @@ router.post(
     });
 
     const response = {
-      venueId: newEvent.id,
+      id: newEvent.id,
+      groupId: newEvent.groupId,
+      venueId: newEvent.venueId,
       name: newEvent.name,
       type: newEvent.type,
       capacity: newEvent.capacity,

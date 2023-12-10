@@ -17,16 +17,22 @@ async function noImage(type, imageId) {
 }
 
 //user handler
-async function userValidate(reqId) {
-  const user = await Member.findOne({
+async function userValidate(reqId, groupId) {
+  const group = await Group.findByPk(groupId);
+  const member = await Member.findOne({
     where: { userId: reqId },
   });
 
-  const groupId = user.groupId;
-  const group = await Group.findByPk(groupId);
-  console.log(group);
-
-  return user.status == "co-host" || group.organizerId === reqId;
+  if (group.organizerId === reqId) {
+    return true;
+  }
+  if (member) {
+    if (member.status == "co-host") {
+      return true;
+    }
+  } else {
+    return false;
+  }
 }
 
 module.exports = { noImage, userValidate };
