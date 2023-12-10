@@ -127,6 +127,10 @@ router.get("/:eventId", async (req, res) => {
 
   const numAttending = await getNumAttending(event.id);
 
+  if (typeof event.price === "string") {
+    event.price = parseFloat(price);
+  }
+
   return res.json({
     id: event.id,
     groupId: event.groupId,

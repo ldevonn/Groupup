@@ -381,6 +381,15 @@ router.get("/:groupId/venues", requireAuth, async (req, res) => {
       },
     });
 
+    venues.forEach((venue) => {
+      if (typeof venue.lat === "string") {
+        venue.lat = parseFloat(venue.lat);
+      }
+      if (typeof venue.lng === "string") {
+        venue.lng = parseFloat(venue.lng);
+      }
+    });
+
     return res.json({ Venues: venues });
   }
 });
@@ -394,9 +403,6 @@ router.post(
   async (req, res) => {
     const groupId = req.params.groupId;
     let { address, city, state, lat, lng } = req.body;
-
-    lat = Number(lat);
-    lng = Number(lng);
 
     const group = await Group.findByPk(groupId);
 
@@ -417,6 +423,12 @@ router.post(
       lng,
     });
 
+    if (typeof newVenue.lat === "string") {
+      newVenue.lat = parseFloat(lat);
+    }
+    if (typeof newVenue.lng === "string") {
+      newVenue.lng = parseFloat(lng);
+    }
     const response = {
       id: newVenue.id,
       groupId: newVenue.groupId,
@@ -519,8 +531,6 @@ router.post(
       endDate,
     } = req.body;
 
-    price = Number(price);
-
     //find and check group
     const group = await Group.findByPk(groupId);
     if (!group) {
@@ -547,6 +557,10 @@ router.post(
       startDate,
       endDate,
     });
+
+    if (typeof newEvent.price === "string") {
+      newEvent.price = parseFloat(price);
+    }
 
     const response = {
       id: newEvent.id,
