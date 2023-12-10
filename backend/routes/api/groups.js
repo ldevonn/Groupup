@@ -218,12 +218,15 @@ router.get("/:groupId", async (req, res) => {
 
   const numMembers = await getMembers(group.id);
 
-  if (typeof group.Venues.lat === "string") {
-    group.Venues.lat = parseFloat(group.Venues.lat);
-  }
-  if (typeof group.Venues.lng === "string") {
-    group.Venues.lng = parseFloat(group.Venues.lng);
-  }
+  group.Venues.forEach((venue) => {
+    if (typeof venue.lat === "string") {
+      venue.lat = parseFloat(venue.lat);
+    }
+    if (typeof venue.lng === "string") {
+      venue.lng = parseFloat(venue.lng);
+    }
+  });
+
   return res.json({
     id: group.id,
     organizerId: group.organizerId,
