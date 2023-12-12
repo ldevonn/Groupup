@@ -21,7 +21,7 @@ const handleUserValidationErrors = (req, res, next) => {
       errors: errors,
     };
 
-    return res.status(401).json(err);
+    return res.status(400).json(err);
   }
 
   next();
@@ -52,7 +52,7 @@ router.post("/", validateLogin, async (req, res, next) => {
 
   if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
     const err = { message: "Invalid credentials" };
-    return res.status(400).json(err);
+    return res.status(401).json(err);
   }
 
   const safeUser = {
