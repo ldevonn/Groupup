@@ -19,12 +19,26 @@ function SignupFormPage() {
 
     function handleSubmit(e) {
         e.preventDefault()
-        setErrors({})
+        if (password === confirmPassword) {
+            setErrors({})
+            return dispatch(signup({
+                username, 
+                firstName, 
+                lastName, 
+                email, 
+                password
+            })
+            ).catch(async (res) => {
+                const data = await res.json();
+                if (data?.errors) {
+                    setErrors(data.errors)
+                }
+            });
+        }
+        return setErrors({
+            confirmPassword: "Confirm Password field must be the same as the Password field"
+        })
 
-        return dispatch(signup({username, firstName, lastName, email, password})).catch(async (res) => {
-            const data = await res.json();
-            if (data?.message) setErrors(data)
-        },)
     }
 
     return (
@@ -42,6 +56,7 @@ function SignupFormPage() {
                     required/>
                 </label>
             </div>
+            {errors.username && <p style={{color: 'red'}}>{errors.usernameme}</p>}
             <div>
                 <label>
                     First Name:
@@ -53,6 +68,7 @@ function SignupFormPage() {
                     required/>
                 </label>
             </div>
+            {errors.firstName && <p style={{color: 'red'}}>{errors.firstName}</p>}
             <div>
                 <label>
                     Last Name:
@@ -64,6 +80,7 @@ function SignupFormPage() {
                     required/>
                 </label>
             </div>
+            {errors.lastName && <p style={{color: 'red'}}>{errors.lastName}</p>}
             <div>
                 <label>
                     Email:
@@ -75,6 +92,7 @@ function SignupFormPage() {
                     required/>
                 </label>
             </div>
+            {errors.email && <p style={{color: 'red'}}>{errors.email}</p>}
             <div>
                 <label>
                     Password
@@ -86,6 +104,7 @@ function SignupFormPage() {
                 required/>
                 </label>
             </div>
+            {errors.password && <p style={{color: 'red'}}>{errors.password}</p>}
             <div>
                 <label>
                     Confirm Password
@@ -95,6 +114,7 @@ function SignupFormPage() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required/>
                 </label>
+                {errors.confirmPassword && <p style={{color: 'red'}}>{errors.confirmPassword}</p>}
             </div>
             <button type="submit">Submit</button>
         </form>
