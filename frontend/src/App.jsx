@@ -3,6 +3,7 @@ import LoginFormPage from './components/LoginFormPage/LoginFormPage';
 import { restoreUser } from './store/session.js';
 import {useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
+import SignupFormPage from './components/SignupFormPage/SignupFormPage.jsx';
 
 function Layout() {
   const dispatch = useDispatch()
@@ -33,6 +34,10 @@ function App() {
         {
           path: '/login',
           element: <LoginFormPage/>
+        },
+        {
+          path: '/signup',
+          element: <SignupFormPage/>
         },
         {
           path: '*',

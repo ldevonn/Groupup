@@ -1,23 +1,28 @@
 import { useState } from "react"
 import {login} from '../../store/session.js'
 import {useDispatch, useSelector} from 'react-redux'
-import {Navigate} from 'react-router-dom'
+import { useNavigate } from "react-router-dom"
 
 function LoginFormPage() {
     const sessionUser = useSelector((state) => state.session.user)
     const [credential, setCredential] = useState('')
     const [password, setPassword] = useState('')
+    const [errors, setErrors] = useState({})
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
-    if (sessionUser) return <Navigate to="/" replace={true} />;
+    if (sessionUser) navigate('/')
 
     function handleSubmit(e) {
         e.preventDefault()
+        setErrors({})
 
         return dispatch(login({credential, password})).catch(
-            window.alert('Login Failed')
+            async (res) => {
+                const data = await res.json();
+                if (data?.message) setErrors(data)
+            },
         )
-        
     }
 
     return (
@@ -40,13 +45,16 @@ function LoginFormPage() {
                 <label>
                     Password:
                     <input 
-                    type='text' 
+                    type='password' 
                     name="password" 
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     />
                 </label>
+                <div style={{color: "red"}}>
+                    {errors.message && errors.message}
+                </div>
             </div>
             <button type="submit">
                 Submit
