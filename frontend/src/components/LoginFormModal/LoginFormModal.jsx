@@ -1,5 +1,5 @@
 import { useState } from "react"
-import {useDispatch, useSelector} from 'react-redux'
+import {useDispatch} from 'react-redux'
 import {login} from '../../store/session.js'
 import {useModal} from '../../context/Modal.jsx'
 
