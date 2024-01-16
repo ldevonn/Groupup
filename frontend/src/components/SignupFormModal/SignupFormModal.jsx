@@ -1,21 +1,18 @@
 import { useState } from "react"
-import {useNavigate} from 'react-router-dom'
-import {useDispatch, useSelector} from 'react-redux'
+import {useDispatch} from 'react-redux'
+import {useModal} from '../../context/Modal'
 import { signup } from "../../store/session"
 
-function SignupFormPage() {
-    const navigate = useNavigate()
+function SignupFormModal() {
     const dispatch = useDispatch()
+    const [email, setEmail] = useState('')
     const [username, setUsername] = useState('')
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('') 
-    const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [errors, setErrors] = useState({})
-    const sessionUser = useSelector((state) => state.session.user)
-
-    if (sessionUser) navigate('/')
+    const {closeModal} = useModal()
 
     function handleSubmit(e) {
         e.preventDefault()
@@ -28,7 +25,9 @@ function SignupFormPage() {
                 email, 
                 password
             })
-            ).catch(async (res) => {
+            )
+            .then(closeModal)
+            .catch(async (res) => {
                 const data = await res.json();
                 if (data?.errors) {
                     setErrors(data.errors)
@@ -122,4 +121,4 @@ function SignupFormPage() {
     )
 }
 
-export default SignupFormPage
+export default SignupFormModal

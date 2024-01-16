@@ -1,17 +1,15 @@
 import { useEffect, useState } from 'react';
 import {useDispatch } from 'react-redux';
 import {createBrowserRouter, RouterProvider, Outlet} from 'react-router-dom'
-import LoginFormPage from './components/LoginFormPage/LoginFormPage';
-import SignupFormPage from './components/SignupFormPage/SignupFormPage.jsx';
 import Navigation from './components/Navigation/Navigation.jsx';
-import { restoreUser } from './store/session.js';
+import * as sessionActions from './store/session';
 
 function Layout() {
   const dispatch = useDispatch()
   const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
-    dispatch(restoreUser()).then(() => {
+    dispatch(sessionActions.restoreUser()).then(() => {
       setIsLoaded(true)
     })
   }, [dispatch])
@@ -32,14 +30,6 @@ function App() {
         {
           path: '/',
           element: <h1>Welcome!</h1>
-        },
-        {
-          path: '/login',
-          element: <LoginFormPage/>
-        },
-        {
-          path: '/signup',
-          element: <SignupFormPage/>
         },
         {
           path: '*',

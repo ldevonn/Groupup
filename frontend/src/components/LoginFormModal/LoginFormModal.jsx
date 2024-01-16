@@ -1,40 +1,37 @@
 import { useState } from "react"
-import {login} from '../../store/session.js'
 import {useDispatch, useSelector} from 'react-redux'
-import { useNavigate } from "react-router-dom"
+import {login} from '../../store/session.js'
+import {useModal} from '../../context/Modal.jsx'
 
-function LoginFormPage() {
-    const sessionUser = useSelector((state) => state.session.user)
+function LoginFormModal() {
+    const dispatch = useDispatch()
     const [credential, setCredential] = useState('')
     const [password, setPassword] = useState('')
     const [errors, setErrors] = useState({})
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
-
-    if (sessionUser) navigate('/')
+    const {closeModal} = useModal()
 
     function handleSubmit(e) {
         e.preventDefault()
         setErrors({})
 
-        return dispatch(login({credential, password})).catch(
-            async (res) => {
-                const data = await res.json();
-                if (data?.message) setErrors(data)
+        return dispatch(login({credential, password}))
+        .then(closeModal)
+        .catch(async (res) => {
+            const data = await res.json();
+            if (data?.message) setErrors(data)
             },
         )
     }
 
     return (
         <>
-        <h1>LoginFormPage</h1>
-        <form onSubmit={handleSubmit} className="LoginForm">
+        <h1>Log In</h1>
+        <form onSubmit={handleSubmit}>
             <div>
                 <label>
-                    Username:
+                    Username or Email:
                     <input 
-                    type='text'
-                    name="credential" 
+                    type='text' 
                     value={credential} 
                     onChange={(e) => setCredential(e.target.value)}
                     required
@@ -46,7 +43,6 @@ function LoginFormPage() {
                     Password:
                     <input 
                     type='password' 
-                    name="password" 
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -64,4 +60,4 @@ function LoginFormPage() {
     )
 }
 
-export default LoginFormPage
+export default LoginFormModal
