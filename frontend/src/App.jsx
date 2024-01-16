@@ -1,9 +1,10 @@
+import { useEffect, useState } from 'react';
+import {useDispatch } from 'react-redux';
 import {createBrowserRouter, RouterProvider, Outlet} from 'react-router-dom'
 import LoginFormPage from './components/LoginFormPage/LoginFormPage';
-import { restoreUser } from './store/session.js';
-import {useDispatch } from 'react-redux';
-import { useEffect, useState } from 'react';
 import SignupFormPage from './components/SignupFormPage/SignupFormPage.jsx';
+import Navigation from './components/Navigation/Navigation.jsx';
+import { restoreUser } from './store/session.js';
 
 function Layout() {
   const dispatch = useDispatch()
@@ -16,6 +17,7 @@ function Layout() {
   }, [dispatch])
   return (
     <>
+    <Navigation isLoaded={isLoaded}/>
     {isLoaded && <Outlet />}
     </>
   )
