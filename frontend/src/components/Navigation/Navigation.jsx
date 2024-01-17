@@ -17,27 +17,22 @@ function Navigation({ isLoaded }) {
     </>
   ) : (
     <>
-      <li>
         <OpenModalButton
           buttonText="Log In"
           modalComponent={<LoginFormModal/>}/>
-      </li>
-      <li>
         <OpenModalButton
           buttonText="Sign Up"
           modalComponent={<SignupFormModal />}
           />
-      </li>
+
     </>
   );
 
   return (
-    <ul>
-      <li>
-        <NavLink to="/">Home</NavLink>
-      </li>
+    <div>
+      <NavLink to="/">Home</NavLink>
       {isLoaded && sessionLinks}
-    </ul>
+    </div>
   );
 }
 

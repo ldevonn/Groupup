@@ -1,3 +1,15 @@
 .hidden {
     display: none;
 }
+
+.login-button {
+    display: flex;
+    justify-content: right;
+    background-color: red;
+}
+
+.signup-button {
+    display: flex;
+    justify-content: right;
+    background-color: green;
+}

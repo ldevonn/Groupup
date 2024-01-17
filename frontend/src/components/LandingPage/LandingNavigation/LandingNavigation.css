@@ -1,0 +1,21 @@
+.landing-nav-links {
+    display: flex;
+    justify-content: space-evenly;
+    
+}
+
+.see-all-groups {
+    color: teal;
+    font-size: 20px;
+}
+
+.find-event {
+    color: teal;
+    font-size: 20px;
+}
+
+.start-group {
+    cursor: not-allowed;
+    color: lightgray;
+    font-size: 20px;
+}

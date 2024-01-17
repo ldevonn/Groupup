@@ -1,0 +1,35 @@
+.event-group-nav {
+    display: flex;
+    justify-content: center;
+}
+
+.groups-header {
+    border-bottom: 2px solid black;
+}
+
+.groups-link {
+    font-size: 32px;
+    color: black;
+}
+
+.groups-link:hover {
+    color: #1E9C9C;
+}
+
+.events-link:hover {
+    color: #1E9C9C;
+}
+
+.active {
+    text-decoration: solid;
+    color: teal;
+}
+
+.inactive {
+    color: black;
+    text-decoration: none;
+}
+
+.events-link {
+    font-size: 32px;
+}
