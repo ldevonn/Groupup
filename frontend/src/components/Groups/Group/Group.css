@@ -1,0 +1,31 @@
+.group {
+    display: block;
+    margin: auto;
+    margin-top: 10px;
+    background-color: #e0ffff;
+    text-align: center;
+    border-top: 2px solid;
+    border-bottom: 2px solid;
+    border-left: 2px solid;
+    border-right: 2px solid;
+    width: 500px;
+}
+.group:hover {
+    background-color: lightgreen;
+    transition-duration: 500ms;
+    cursor: pointer;
+}
+
+#name {
+    font-size: 24px;
+}
+
+#location {
+    font-size: 12px;
+    background-color: lightcoral;
+}
+
+#image {
+    width: 500px;
+    height: 300px;
+}

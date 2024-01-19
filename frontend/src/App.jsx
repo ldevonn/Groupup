@@ -6,6 +6,7 @@ import * as sessionActions from './store/session';
 import LandingPage from './components/LandingPage/LandingPage.jsx';
 import Groups from './components/Groups/Groups.jsx';
 import Events from './components/Events/Events.jsx'
+import GroupDetails from './components/Groups/GroupById/GroupDetails.jsx'
 
 function Layout() {
   const dispatch = useDispatch()
@@ -41,6 +42,10 @@ function App() {
         {
           path: '/events',
           element: <Events/>
+        },
+        {
+          path: '/groups/:id',
+          element: <GroupDetails/>
         },
         {
           path: '*',

@@ -1,0 +1,17 @@
+.group-title-card{
+    text-align: center;
+}
+
+.groupImage {
+    height: 500px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.about {
+    text-align: center;
+}
+
+.events {
+    text-align: center;
+}

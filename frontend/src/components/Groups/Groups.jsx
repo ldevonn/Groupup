@@ -2,19 +2,9 @@ import { NavLink } from 'react-router-dom'
 import {useDispatch, useSelector} from 'react-redux'
 import {fetchGroups} from '../../store/groups'
 import { useEffect } from 'react'
+import Group from './Group/Group'
 
 function Groups() {
-    const dispatch = useDispatch()
-    const groups = useSelector((state) => state.groups.groups.Groups);
-
-    useEffect(() => {
-        dispatch(fetchGroups());
-    }, [dispatch]);
-    
-    const groupArray = groups && groups.map((group) => {console.log(group)})
-
-
-
     return (
         <>
         <div className='groups-header'>
@@ -25,6 +15,7 @@ function Groups() {
             </div>
             <p>Groups in Groupup</p>
         </div>
+            <Group/>
         </>
     );
     }
