@@ -1,7 +1,4 @@
 import { NavLink } from 'react-router-dom'
-import {useDispatch, useSelector} from 'react-redux'
-import {fetchGroups} from '../../store/groups'
-import { useEffect } from 'react'
 import Group from './Group/Group'
 
 function Groups() {

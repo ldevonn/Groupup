@@ -1,4 +1,3 @@
-import { useEffect } from "react"
 import { NavLink, useLocation } from "react-router-dom"
 import './GroupDetails.css'
 
@@ -19,7 +18,7 @@ function GroupById() {
     } else {
         privacyImg = "fa-solid fa-lock-open"
     }
-    
+
     return (
         <>
         <div className="group-title-card">
@@ -33,7 +32,7 @@ function GroupById() {
             <h3>Organizer</h3>
             <p>Bob Bobby</p>
             
-            <h3>What we're about</h3>
+            <h3 >What we&apos;re about</h3>
             <p>{group.about}</p>
         </div>
         <div className="events">
