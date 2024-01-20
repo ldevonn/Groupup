@@ -7,6 +7,8 @@ import LandingPage from './components/LandingPage/LandingPage.jsx';
 import Groups from './components/Groups/Groups.jsx';
 import Events from './components/Events/Events.jsx'
 import GroupDetails from './components/Groups/GroupById/GroupDetails.jsx'
+import NewGroup from './components/Groups/NewGroup/NewGroup.jsx'
+
 
 function Layout() {
   const dispatch = useDispatch()
@@ -46,6 +48,10 @@ function App() {
         {
           path: '/groups/:id',
           element: <GroupDetails/>
+        },
+        {
+          path: '/groups/new',
+          element: <NewGroup/>
         },
         {
           path: '*',
