@@ -2,6 +2,7 @@ import { useState } from "react"
 import {useDispatch} from 'react-redux'
 import {login} from '../../store/session.js'
 import {useModal} from '../../context/Modal.jsx'
+import './LoginFormModal.css'
 
 function LoginFormModal() {
     const dispatch = useDispatch()
@@ -25,35 +26,39 @@ function LoginFormModal() {
 
     return (
         <>
-        <h1>Log In</h1>
-        <form onSubmit={handleSubmit}>
+        {/* <h1 className="header">Log In</h1> */}
+        <form className="form" onSubmit={handleSubmit}>
+            <div id="errors" style={{color: "red"}}>
+                    {errors.message && errors.message}
+            </div>
             <div>
                 <label>
-                    Username or Email:
+                    <i className="fa-solid fa-user" id="login-user-icon"></i>
                     <input 
                     type='text' 
                     value={credential} 
                     onChange={(e) => setCredential(e.target.value)}
+                    id="credentials"
                     required
+                    placeholder="Username or Email"
                     />
                 </label>
             </div>
             <div>
-                <label>
-                    Password:
+                <label> 
+                    <i className="fa-solid fa-lock" id="login-lock-icon"></i>
                     <input 
-                    type='password' 
+                    type='password'
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    id="password"
                     required
+                    placeholder="Password"
                     />
                 </label>
-                <div style={{color: "red"}}>
-                    {errors.message && errors.message}
-                </div>
             </div>
-            <button type="submit">
-                Submit
+            <button id="login-button" type="submit">
+                Log In
             </button>
         </form>
         </>

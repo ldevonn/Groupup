@@ -1,0 +1,30 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 450px;
+    height: 300px;
+}
+
+#signup-button {
+    width: 365px;
+    height: 50px;
+    font-size: 1.5rem;
+    background-color: rgb(128, 188, 38);
+    border-bottom-color: green;
+    color: white;
+    border-radius: var(--borderRadius,.5rem);
+    font-weight: 800;
+    border: none;
+}
+
+#signup-button:hover {
+    cursor: pointer;
+    transition: 200ms;
+    background-color: rgb(134, 201, 34);
+}
+
+#signup-button:active {
+    background-color: rgb(111, 166, 27);
+    transition: 100ms;
+}
