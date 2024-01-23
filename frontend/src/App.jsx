@@ -46,7 +46,7 @@ function App() {
           element: <Events/>
         },
         {
-          path: '/groups/:id',
+          path: '/groups/:groupId',
           element: <GroupDetails/>
         },
         {

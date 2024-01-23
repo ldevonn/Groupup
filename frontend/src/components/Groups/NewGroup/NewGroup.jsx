@@ -1,10 +1,11 @@
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createGroup } from "../../../store/groups";
+import {useNavigate} from 'react-router-dom'
 
 function NewGroup() {
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const [errors, setErrors] = useState({})
     
 
@@ -13,6 +14,7 @@ function NewGroup() {
         e.preventDefault()
         setErrors({})
 
+        //translates the group privacy to a boolean value
         function visibilityCheck() {
             if (e.target.elements.groupVisibility.value === 'Public'){
                 return false
@@ -20,7 +22,7 @@ function NewGroup() {
                 return true
             }
         }
-        console.log(e.target.elements.groupType.value)
+
         function typeCheck() {
             if (e.target.elements.groupType.value === 'InPerson'){
                 return 'In person'
@@ -35,21 +37,24 @@ function NewGroup() {
             name: e.target.elements.groupName.value,
             about: e.target.elements.groupDescription.value,
             type: typeCheck(),
-            private: visibilityCheck(),
+            isPrivate: visibilityCheck(),
         };
-        console.log(formData)
-        const createdGroup = await dispatch(createGroup(formData)).catch(async (res) => {
-            const data = await res.json();
-            if (data?.message) {
-                setErrors(data)
-                console.log(errors.message)
-            }
-            },
-        );
-        console.log(createdGroup)
-        // const groupId = createdGroup.id;
 
-        // navigate(`/groups/${groupId}`);
+        const createdGroup = await dispatch(createGroup(formData))
+        .then(() => {
+            console.log('no errors')
+            const groupId = createdGroup.id;
+            return navigate(`/groups/${groupId}`);
+        }
+        )
+        .catch(async (res) => {
+            const data = await res.json();
+            if (data?.errors) {
+                setErrors({...data.errors})
+                console.log('errors')
+                return errors
+            }
+        } )
     }
 
   return (
@@ -63,13 +68,17 @@ function NewGroup() {
             <input 
                 type="text"
                 name="city"
+                required
                 placeholder="city">
             </input>
+            <div>{errors && errors.city}</div>
             <input 
                 type="text"
                 name="state"
+                required
                 placeholder="state">
             </input>
+            <div>{errors && errors.state}</div>
         </label>
         <label>
             <h1>What will your group&apos;s name be?</h1>
@@ -77,9 +86,10 @@ function NewGroup() {
             <input
             type="text"
             name="groupName"
+            required
             placeholder="What is your group name?">
-            
             </input>
+            <div>{errors && errors.groupName}</div>
         </label>
         <label>
             <h1>Now describe what your group will be about</h1>
@@ -89,31 +99,40 @@ function NewGroup() {
             <input
             type="text"
             name="groupDescription"
+            required
             placeholder="Please write at least 30 characters">
             </input>
+            <div>{errors && errors.about}</div>
         </label>
         <label>
             <h1>Final Steps...</h1>
             <p>Is this an in person or online group?</p>
             <select
             type="dropdown"
-            name="groupType">
+            name="groupType"
+            required
+            >
             <option value="InPerson">In Person</option>
             <option value="Online">Online</option>
             </select>
+            <div>{errors && errors.groupType}</div>
             <p>Is this an in person or online group?</p>
             <select
             type="dropdown"
-            name='groupVisibility'>
+            name='groupVisibility'
+            required>
             <option value="Public">Public</option>
             <option value="Private">Private</option>
             </select>
+            <div>{errors && errors.groupVisibility}</div>
             <p>Please add an image url for your group below:</p>
             <input
             type="text"
             name="imageUrl"
+            required
             placeholder="Image Url">
             </input>
+            <div>{errors && errors.imageUrl}</div>
         </label>
         <button id="new-group-submit" type="submit">
             Create group
