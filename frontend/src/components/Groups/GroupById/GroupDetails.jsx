@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { NavLink, useLocation, useParams } from "react-router-dom"
+import { NavLink, useParams } from "react-router-dom"
 import './GroupDetails.css'
 import { useDispatch, useSelector } from "react-redux"
 import { fetchGroup } from "../../../store/groups"
