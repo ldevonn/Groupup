@@ -1,7 +1,4 @@
 import { NavLink } from 'react-router-dom'
-import {useDispatch, useSelector} from 'react-redux'
-import {fetchGroups} from '../../store/groups'
-import { useEffect } from 'react'
 import Group from './Group/Group'
 
 function Groups() {
@@ -9,7 +6,6 @@ function Groups() {
         <>
         <div className='groups-header'>
             <div className="event-group-nav">
-                <button>test</button>
                 <NavLink to='/events' className='events-link inactive'>Events</NavLink>
                 <NavLink to='/groups' className='groups-link active'>Groups</NavLink>
             </div>

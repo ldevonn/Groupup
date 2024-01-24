@@ -60,19 +60,17 @@ export const createGroup = (group) => async (dispatch) => {
 	return data;
 };
 
-const initialState = { groups: [] };
+const initialState = { groups: {}, group: null };
 
 const groupsReducer = (state = initialState, action) => {
 	switch (action.type) {
 		case FETCH_GROUPS:
 			return {
-				...state,
-				groups: action.payload,
+				...action.payload,
 			};
 		case NEW_GROUP:
 			return {
-				...state,
-				group: action.payload,
+				...action.payload,
 			};
 		case FETCH_GROUP:
 			return {

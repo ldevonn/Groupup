@@ -14,7 +14,6 @@ function NewGroup() {
         e.preventDefault()
         setErrors({})
 
-        //translates the group privacy to a boolean value
         function visibilityCheck() {
             if (e.target.elements.groupVisibility.value === 'Public'){
                 return false
@@ -40,22 +39,20 @@ function NewGroup() {
             isPrivate: visibilityCheck(),
         };
 
-        const createdGroup = await dispatch(createGroup(formData))
-        .then(() => {
+        try {
+            const createdGroup = await dispatch(createGroup(formData))
             console.log('no errors')
             const groupId = createdGroup.id;
-            return navigate(`/groups/${groupId}`);
-        }
-        )
-        .catch(async (res) => {
+            navigate(`/groups/${groupId}`);
+        } catch (res) {
             const data = await res.json();
             if (data?.errors) {
                 setErrors({...data.errors})
                 console.log('errors')
                 return errors
-            }
-        } )
+        }
     }
+}
 
   return (
     <>

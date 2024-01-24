@@ -1,15 +1,27 @@
-.hidden {
-    display: none;
+.logo {
+    position: relative;
+    justify-content: left;
+    bottom: 20px;
+    height: 100px;
+    width: 100px;
 }
 
-.login-button {
-    display: flex;
-    justify-content: right;
-    background-color: red;
+.logo:hover {
+    cursor: pointer;
 }
 
-.signup-button {
+.menuNavigation {
+    flex-direction: row;
+    height: 100px;
+}
+
+#modal-buttons {
     display: flex;
-    justify-content: right;
-    background-color: green;
+    position: relative;
+    justify-content: flex-end;
+    left: -20px;
+    bottom: 90px;
+    
+
+
 }
