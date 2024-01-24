@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ProfileButton from './ProfileButton';
 import OpenModalButton from '../OpenModalButton/OpenModalButton'
@@ -7,10 +7,15 @@ import SignupFormModal from '../SignupFormModal/SignupFormModal'
 import '../Navigation/Navigation.css'
 
 function Navigation({ isLoaded }) {
+  const navigate = useNavigate()
   const sessionUser = useSelector((state) => state.session.user);
+  function handleClick() {
+    navigate('/')
+  }
 
   const sessionLinks = sessionUser ? (
     <>
+      {/* <img src={'src/images/Groupup.png'} alt="Groupup Logo" className='logo' onClick={handleClick} /> */}
       <li>
         <ProfileButton user={sessionUser} />
       </li>
@@ -30,9 +35,11 @@ function Navigation({ isLoaded }) {
   );
 
   return (
-    <div>
-      <NavLink to="/">Home</NavLink>
+    <div className='menuNavigation'>
+      <img src={'src/images/Groupup.png'} alt="Groupup Logo" className='logo' onClick={handleClick} />
+      <div id='modal-buttons'>
       {isLoaded && sessionLinks}
+      </div>
     </div>
   );
 }

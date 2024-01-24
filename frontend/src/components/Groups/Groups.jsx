@@ -6,7 +6,6 @@ function Groups() {
         <>
         <div className='groups-header'>
             <div className="event-group-nav">
-                <button>test</button>
                 <NavLink to='/events' className='events-link inactive'>Events</NavLink>
                 <NavLink to='/groups' className='groups-link active'>Groups</NavLink>
             </div>

@@ -1,15 +1,20 @@
+.group-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .group {
-    display: block;
-    margin: auto;
     margin-top: 10px;
     background-color: #e0ffff;
     text-align: center;
-    border-top: 2px solid;
-    border-bottom: 2px solid;
-    border-left: 2px solid;
-    border-right: 2px solid;
+    border: 2px solid;
     width: 500px;
+    display: flex;
+    overflow: hidden;
+    /* flex-wrap: wrap; */
 }
+
 .group:hover {
     background-color: lightgreen;
     transition-duration: 500ms;
@@ -26,6 +31,12 @@
 }
 
 #image {
-    width: 500px;
-    height: 300px;
+    width: 200px; /* Adjust the width as needed */
+    object-fit: cover; /* Maintain aspect ratio and cover the container */
+}
+
+.group-details {
+    flex: 1;
+    padding: 10px;
+    text-align: left;
 }
