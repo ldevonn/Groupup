@@ -2,11 +2,27 @@ import { csrfFetch } from "./csrf";
 
 const FETCH_GROUPS = "groups/fetchGroupsSuccess";
 const NEW_GROUP = "groups/newGroup";
+const EDIT_GROUP = "groups/editGroup";
 const FETCH_GROUP = "groups/fetchGroup";
+const DELETE_GROUP = "groups/deleteGroup";
 
 const newGroup = (group) => {
 	return {
 		type: NEW_GROUP,
+		payload: group,
+	};
+};
+
+const editGroup = (group) => {
+	return {
+		type: EDIT_GROUP,
+		payload: group,
+	};
+};
+
+const deleteGroup = (group) => {
+	return {
+		type: DELETE_GROUP,
 		payload: group,
 	};
 };
@@ -41,9 +57,18 @@ export const fetchGroups = () => async (dispatch) => {
 	return res;
 };
 
+export const removeGroup = (group) => async (dispatch) => {
+	const { id } = group;
+	const response = await csrfFetch(`/api/groups/${id}`, {
+		method: "DELETE",
+	});
+	const data = await response.json();
+	dispatch(deleteGroup(data.group));
+	return data;
+};
+
 export const createGroup = (group) => async (dispatch) => {
 	const { name, type, about, isPrivate, city, state } = group;
-	console.log(name);
 	const response = await csrfFetch("/api/groups", {
 		method: "POST",
 		body: JSON.stringify({
@@ -60,6 +85,25 @@ export const createGroup = (group) => async (dispatch) => {
 	return data;
 };
 
+export const updateGroup = (group) => async (dispatch) => {
+	const { id, name, type, about, isPrivate, city, state } = group;
+	console.log(id);
+	const response = await csrfFetch(`/api/groups/${id}`, {
+		method: "PUT",
+		body: JSON.stringify({
+			name,
+			type,
+			about,
+			private: isPrivate,
+			city,
+			state,
+		}),
+	});
+	const data = await response.json();
+	dispatch(editGroup(data.group));
+	return data;
+};
+
 const initialState = { groups: {}, group: null };
 
 const groupsReducer = (state = initialState, action) => {
@@ -73,6 +117,14 @@ const groupsReducer = (state = initialState, action) => {
 				...action.payload,
 			};
 		case FETCH_GROUP:
+			return {
+				group: action.payload,
+			};
+		case DELETE_GROUP:
+			return {
+				group: action.payload,
+			};
+		case EDIT_GROUP:
 			return {
 				group: action.payload,
 			};

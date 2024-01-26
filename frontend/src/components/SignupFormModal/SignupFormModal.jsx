@@ -38,8 +38,35 @@ function SignupFormModal() {
         return setErrors({
             confirmPassword: "Confirm Password field must be the same as the Password field"
         })
-
     }
+
+    const isDisabled = () => {
+        if (
+            username.length < 4 ||
+            password.length < 6 ||
+            firstName.length === 0 ||
+            lastName.length === 0 ||
+            email.length === 0 ||
+            checkPassLengths()
+        ) return true
+    };
+
+    const checkPassLengths = () => {
+        if (
+            password.length >= 6 && 
+            confirmPassword.length >= 6 &&
+            password.length !== confirmPassword.length
+        ) {
+            return 'Password has a different length than the confirmed password.'
+        }
+    };
+    const determineId = () => {
+        if (isDisabled()){
+            return 'login-disabled'
+        } else {
+            return 'login-enabled'
+        }
+    };
 
     return (
         <>
@@ -51,6 +78,7 @@ function SignupFormModal() {
                     name="username" 
                     placeholder="Username"
                     value={username} 
+                    id="signup-fields"
                     onChange={(e) => setUsername(e.target.value)} 
                     required/>
                 </label>
@@ -59,6 +87,7 @@ function SignupFormModal() {
             <div>
                 <label>
                     <input 
+                    id="signup-fields"
                     type="text"
                     name="firstName" 
                     placeholder="First Name"
@@ -71,6 +100,7 @@ function SignupFormModal() {
             <div>
                 <label>
                     <input 
+                    id="signup-fields"
                     type="text" 
                     name="lastName" 
                     placeholder="Last Name"
@@ -83,6 +113,7 @@ function SignupFormModal() {
             <div>
                 <label>
                     <input 
+                    id="signup-fields"
                     type="text" 
                     name="email" 
                     placeholder="Email"
@@ -95,6 +126,7 @@ function SignupFormModal() {
             <div>
                 <label>
                 <input 
+                id="signup-fields"
                 type="password" 
                 name="password" 
                 placeholder="Password"
@@ -107,15 +139,18 @@ function SignupFormModal() {
             <div>
                 <label>
                 <input
+                id="final-field"
                 type="password"
                 placeholder="Confirm Password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required/>
                 </label>
-                {errors.confirmPassword && <p style={{color: 'red'}}>{errors.confirmPassword}</p>}
+                {checkPassLengths() && <p id="errors" style={{color: 'red'}}>{`${checkPassLengths()}`}</p>}
             </div>
-            <button id="signup-button" type="submit">Sign Up</button>
+            <button id={`${determineId()}`} type="submit" disabled={isDisabled()}>
+                Sign Up
+            </button>
         </form>
         </>
     )

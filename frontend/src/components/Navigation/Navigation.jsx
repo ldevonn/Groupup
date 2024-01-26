@@ -9,17 +9,17 @@ import '../Navigation/Navigation.css'
 function Navigation({ isLoaded }) {
   const navigate = useNavigate()
   const sessionUser = useSelector((state) => state.session.user);
+
   function handleClick() {
     navigate('/')
   }
 
   const sessionLinks = sessionUser ? (
     <>
-      {/* <img src={'src/images/Groupup.png'} alt="Groupup Logo" className='logo' onClick={handleClick} /> */}
+      <NavLink to='/groups/new'>Start a New Group</NavLink>
       <li>
         <ProfileButton user={sessionUser} />
       </li>
-      <NavLink to='/groups/new'>Start a New Group</NavLink>
     </>
   ) : (
     <>
@@ -36,7 +36,12 @@ function Navigation({ isLoaded }) {
 
   return (
     <div className='menuNavigation'>
-      <img src={'src/images/Groupup.png'} alt="Groupup Logo" className='logo' onClick={handleClick} />
+      <img
+        src={'/src/images/Groupup.png'}
+        alt="Groupup Logo"
+        className='logo'
+        onClick={handleClick}
+      />
       <div id='modal-buttons'>
       {isLoaded && sessionLinks}
       </div>

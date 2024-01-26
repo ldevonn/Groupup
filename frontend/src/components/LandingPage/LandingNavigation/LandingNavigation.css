@@ -4,18 +4,23 @@
     
 }
 
-.see-all-groups {
+#see-all-groups {
     color: teal;
     font-size: 20px;
 }
 
-.find-event {
+#find-event {
     color: teal;
     font-size: 20px;
 }
 
-.start-group {
+#start-group {
+    color: teal;
+    font-size: 20px;
+}
+
+#start-group-disabled {
     cursor: not-allowed;
-    color: lightgray;
+    color: gray;
     font-size: 20px;
 }

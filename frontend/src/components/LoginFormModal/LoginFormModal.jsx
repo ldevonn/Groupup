@@ -24,9 +24,30 @@ function LoginFormModal() {
         )
     }
 
+    const isDisabled = () => {
+        return credential.length < 4 || password.length < 6;
+    };
+    const determineId = () => {
+        if (isDisabled()){
+            return 'login-disabled'
+        } else {
+            return 'login-enabled'
+        }
+    };
+
+    function handleDemoUser(e) {
+        return dispatch(login({credential: 'JohnSmith', password: 'secret password'}))
+        .then(closeModal)
+        .catch(async (res) => {
+            const data = await res.json();
+            if (data?.message) setErrors(data)
+            },
+        )
+
+    }
+
     return (
         <>
-        {/* <h1 className="header">Log In</h1> */}
         <form className="form" onSubmit={handleSubmit}>
             <div id="errors" style={{color: "red"}}>
                     {errors.message && errors.message}
@@ -57,7 +78,8 @@ function LoginFormModal() {
                     />
                 </label>
             </div>
-            <button id="login-button" type="submit">
+            <button id={'demo-user'} onClick={handleDemoUser}>Demo User</button>
+            <button id={`${determineId()}`} type="submit" disabled={isDisabled()}>
                 Log In
             </button>
         </form>

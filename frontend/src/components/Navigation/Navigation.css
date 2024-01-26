@@ -1,7 +1,5 @@
 .logo {
     position: relative;
-    justify-content: left;
-    bottom: 20px;
     height: 100px;
     width: 100px;
 }
@@ -11,17 +9,20 @@
 }
 
 .menuNavigation {
-    flex-direction: row;
+    display: flex;
+    justify-content: space-between;
     height: 100px;
+    padding: 0 20px;
 }
 
 #modal-buttons {
     display: flex;
-    position: relative;
-    justify-content: flex-end;
-    left: -20px;
-    bottom: 90px;
-    
+}
 
+#modal-buttons > *:not(:last-child) {
+    margin-right: 10px;
+}
 
+.hidden {
+    display: none;
 }

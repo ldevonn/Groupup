@@ -35,9 +35,29 @@
     margin-bottom: 45px;
 }
 
-#login-button {
+#login-enabled:hover {
+    cursor: pointer;
+    transition: 200ms;
+    background-color: rgb(134, 201, 34);
+}
+
+#login-disabled {
     width: 365px;
     height: 50px;
+    cursor: not-allowed;
+    font-size: 1.5rem;
+    border-bottom-color: green;
+    color: white;
+    border-radius: var(--borderRadius,.5rem);
+    font-weight: 800;
+    border: none;
+    background-color: dimgray;
+}
+
+#login-enabled {
+    width: 365px;
+    height: 50px;
+    cursor: pointer;
     font-size: 1.5rem;
     background-color: rgb(128, 188, 38);
     border-bottom-color: green;
@@ -47,13 +67,7 @@
     border: none;
 }
 
-#login-button:hover {
-    cursor: pointer;
-    transition: 200ms;
-    background-color: rgb(134, 201, 34);
-}
-
-#login-button:active {
+#login-enabled:active {
     background-color: rgb(111, 166, 27);
     transition: 100ms;
 }
@@ -77,4 +91,29 @@
     top: 25px;
     font-size: 18px;
     font-weight: bolder;
+}
+
+#demo-user:hover {
+    cursor: pointer;
+    transition: 200ms;
+    background-color: rgb(134, 201, 34);
+}
+
+#demo-user {
+    width: 365px;
+    height: 50px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    background-color: rgb(128, 188, 38);
+    border-bottom-color: green;
+    color: white;
+    border-radius: var(--borderRadius,.5rem);
+    font-weight: 800;
+    border: none;
+    margin-bottom: 15px;
+}
+
+#demo-user:active {
+    background-color: rgb(111, 166, 27);
+    transition: 100ms;
 }
