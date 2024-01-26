@@ -35,7 +35,7 @@ function LoginFormModal() {
         }
     };
 
-    function handleDemoUser(e) {
+    function handleDemoUser() {
         return dispatch(login({credential: 'JohnSmith', password: 'secret password'}))
         .then(closeModal)
         .catch(async (res) => {

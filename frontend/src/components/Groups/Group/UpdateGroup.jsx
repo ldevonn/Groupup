@@ -14,7 +14,7 @@ function UpdateGroup() {
         if (!sessionUser || group && sessionUser.id !== group.organizerId){
             navigate('/groups')
         }
-    }, [sessionUser, group])
+    }, [group, navigate, sessionUser])
     
 
     async function handleSubmit(e) {
