@@ -37,7 +37,7 @@ function Navigation({ isLoaded }) {
   return (
     <div className='menuNavigation'>
       <img
-        src={'/src/images/Groupup.png'}
+        src={'/frontend/src/images/Groupup.png'}
         alt="Groupup Logo"
         className='logo'
         onClick={handleClick}
