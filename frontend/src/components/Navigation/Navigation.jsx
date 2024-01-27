@@ -5,6 +5,7 @@ import OpenModalButton from '../OpenModalButton/OpenModalButton'
 import LoginFormModal from '../LoginFormModal/LoginFormModal';
 import SignupFormModal from '../SignupFormModal/SignupFormModal'
 import '../Navigation/Navigation.css'
+import logoImage from '../../../public/Groupup.png'
 
 function Navigation({ isLoaded }) {
   const navigate = useNavigate()
@@ -37,7 +38,7 @@ function Navigation({ isLoaded }) {
   return (
     <div className='menuNavigation'>
       <img
-        src={'/frontend/src/images/Groupup.png'}
+        src={logoImage}
         alt="Groupup Logo"
         className='logo'
         onClick={handleClick}
