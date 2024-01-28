@@ -46,7 +46,7 @@ export const fetchGroup = (groupId) => async (dispatch) => {
 	const data = await res.json();
 
 	dispatch(loadGroup(data));
-	return res;
+	return data;
 };
 
 export const fetchGroups = () => async (dispatch) => {

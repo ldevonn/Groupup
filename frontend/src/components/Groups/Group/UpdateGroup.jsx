@@ -72,6 +72,7 @@ function UpdateGroup() {
                 type="text"
                 name="city"
                 required
+                defaultValue={group ? group.city : ''}
                 placeholder="city">
             </input>
             <div>{errors && errors.city}</div>
@@ -79,6 +80,7 @@ function UpdateGroup() {
                 type="text"
                 name="state"
                 required
+                defaultValue={group ? group.state : ''}
                 placeholder="state">
             </input>
             <div>{errors && errors.state}</div>
@@ -90,6 +92,7 @@ function UpdateGroup() {
             type="text"
             name="groupName"
             required
+            defaultValue={group ? group.name : ''}
             placeholder="What is your group name?">
             </input>
             <div>{errors && errors.groupName}</div>
@@ -103,6 +106,7 @@ function UpdateGroup() {
             type="text"
             name="groupDescription"
             required
+            defaultValue={group ? group.about : ''}
             placeholder="Please write at least 30 characters">
             </input>
             <div>{errors && errors.about}</div>
@@ -130,7 +134,7 @@ function UpdateGroup() {
             <div>{errors && errors.groupVisibility}</div>
         </label>
         <button id="new-group-submit" type="submit">
-            Create group
+            Update Group
         </button>
     </form>
     </>

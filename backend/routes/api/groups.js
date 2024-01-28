@@ -75,7 +75,8 @@ const validateNewEvent = [
 
 	check("description")
 		.exists({ checkFalsy: true })
-		.withMessage("Description is required"),
+		.isLength({ min: 30 })
+		.withMessage("Description needs 30 or more characters"),
 
 	check("startDate")
 		.custom((value, { req }) => {

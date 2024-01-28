@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { createGroup } from "../../../store/groups";
 import {useNavigate} from 'react-router-dom'
+import './NewGroup.css'
 
 function NewGroup() {
     const dispatch = useDispatch()
@@ -41,14 +42,12 @@ function NewGroup() {
 
         try {
             const createdGroup = await dispatch(createGroup(formData))
-            console.log('no errors')
             const groupId = createdGroup.id;
             navigate(`/groups/${groupId}`);
         } catch (res) {
             const data = await res.json();
             if (data?.errors) {
                 setErrors({...data.errors})
-                console.log('errors')
                 return errors
         }
     }
@@ -68,14 +67,14 @@ function NewGroup() {
                 required
                 placeholder="city">
             </input>
-            <div>{errors && errors.city}</div>
+            <div className="group-errors">{errors && errors.city}</div>
             <input 
                 type="text"
                 name="state"
                 required
                 placeholder="state">
             </input>
-            <div>{errors && errors.state}</div>
+            <div className="group-errors">{errors && errors.state}</div>
         </label>
         <label>
             <h1>What will your group&apos;s name be?</h1>
@@ -86,7 +85,7 @@ function NewGroup() {
             required
             placeholder="What is your group name?">
             </input>
-            <div>{errors && errors.groupName}</div>
+            <div className="group-errors">{errors && errors.groupName}</div>
         </label>
         <label>
             <h1>Now describe what your group will be about</h1>
@@ -99,7 +98,7 @@ function NewGroup() {
             required
             placeholder="Please write at least 30 characters">
             </input>
-            <div>{errors && errors.about}</div>
+            <div className="group-errors">{errors && errors.about}</div>
         </label>
         <label>
             <h1>Final Steps...</h1>
@@ -112,8 +111,8 @@ function NewGroup() {
             <option value="InPerson">In Person</option>
             <option value="Online">Online</option>
             </select>
-            <div>{errors && errors.groupType}</div>
-            <p>Is this an in person or online group?</p>
+            <div className="group-errors">{errors && errors.groupType}</div>
+            <p>Is this group private or public?</p>
             <select
             type="dropdown"
             name='groupVisibility'
@@ -121,7 +120,7 @@ function NewGroup() {
             <option value="Public">Public</option>
             <option value="Private">Private</option>
             </select>
-            <div>{errors && errors.groupVisibility}</div>
+            <div className="group-errors">{errors && errors.groupVisibility}</div>
             <p>Please add an image url for your group below:</p>
             <input
             type="text"
@@ -129,7 +128,7 @@ function NewGroup() {
             required
             placeholder="Image Url">
             </input>
-            <div>{errors && errors.imageUrl}</div>
+            <div className="group-errors">{errors && errors.imageUrl}</div>
         </label>
         <button id="new-group-submit" type="submit">
             Create group

@@ -1,0 +1,37 @@
+#event-container {
+    line-height: 15px;
+}
+
+#event-delete {
+    background-color: darkgray;
+}
+
+#event-update {
+    background-color: darkgray;
+}
+
+#event-image {
+    width: 700px;
+    height: 400px;
+}
+
+#group-info {
+    background-color: gray;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    width: 300px;
+    height: 100px;
+    border-radius: 10px;
+    
+}
+
+#group-name {
+    position: relative;
+    top: 10px;
+    left: 75px;
+}
+
+#group-private {
+    position: relative;
+    left: 75px
+}

@@ -5,7 +5,7 @@ import OpenModalButton from '../OpenModalButton/OpenModalButton'
 import LoginFormModal from '../LoginFormModal/LoginFormModal';
 import SignupFormModal from '../SignupFormModal/SignupFormModal'
 import '../Navigation/Navigation.css'
-import logoImage from '../../../public/Groupup.png'
+import logoImage from '../../images/Groupup.png'
 
 function Navigation({ isLoaded }) {
   const navigate = useNavigate()

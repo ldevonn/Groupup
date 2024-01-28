@@ -4,6 +4,7 @@ import './GroupDetails.css'
 import { useDispatch, useSelector } from "react-redux"
 import { fetchGroup } from "../../../store/groups"
 import { removeGroup } from "../../../store/groups"
+import JoinGroupButton from "./JoinGroupButton/JoinGroupButton.jsx"
 
 function GroupById() {
     const navigate = useNavigate()
@@ -24,6 +25,10 @@ function GroupById() {
 
     const handleUpdateGroup = () => {
         navigate(`/groups/${group.id}/edit`)
+    }
+
+    const handleNewEvent = () => {
+        navigate(`/groups/${group.id}/events/new`)
     }
     
     let privacyImg
@@ -51,12 +56,14 @@ function GroupById() {
             <img className="groupImage" src="https://media.istockphoto.com/id/1369814693/photo/los-angeles.jpg?s=2048x2048&w=is&k=20&c=6NP3lu8yXQoYTT4v8ot9pgl81pMNc2gZvYD4xD1Y5o8="></img>
             <p><i className="fa-solid fa-location-dot"></i> - {group.city}, {group.state}</p>
             <p><i className={privacyImg}></i> - {isPrivate()}</p>
+            {isOrganizer && <button onClick={handleNewEvent}>Create Event</button>}
             {isOrganizer && <button onClick={handleDeleteGroup}>Delete Group</button>}
             {isOrganizer && <button onClick={handleUpdateGroup}>Edit Group</button>}
+            {isOrganizer && <JoinGroupButton/>}
         </div>
         <div className="about">
             <h3>Organizer</h3>
-            <p>Bob Bobby</p>
+            <p>{group.Organizer.firstName} {group.Organizer.lastName}</p>
             
             <h3 >What we&apos;re about</h3>
             <p>{group.about}</p>

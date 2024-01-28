@@ -10,6 +10,7 @@ import GroupDetails from './components/Groups/GroupById/GroupDetails.jsx'
 import NewGroup from './components/Groups/NewGroup/NewGroup.jsx'
 import UpdateGroup from './components/Groups/Group/UpdateGroup.jsx'
 import EventDetails from './components/EventDetails/EventDetails.jsx';
+import CreateEvent from './components/CreateEvent/CreateEvent.jsx';
 
 
 function Layout() {
@@ -62,6 +63,10 @@ function App() {
         {
           path: '/events/:eventId',
           element: <EventDetails/>
+        },
+        {
+          path: '/groups/:groupId/events/new',
+          element: <CreateEvent/>
         },
         {
           path: '*',
