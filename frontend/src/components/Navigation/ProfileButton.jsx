@@ -43,11 +43,13 @@ function ProfileButton({user}) {
         <button onClick={toggleMenu}>
             <i className="fa-solid fa-user"></i>
         </button>
-        <ul className={ulClassName} ref={ulRef} >
-            <li>Hello {user.firstName}!</li>
-            <li>{user.email}</li>
-            <li><button onClick={logout}>Log Out</button></li>
-        </ul>
+        <div className={ulClassName} ref={ulRef}>
+            <div>Hello {user.firstName}!</div>
+            <div>{user.email}</div>
+            <div><button onClick={() => navigate('/events')}>View Events</button></div>
+            <div><button onClick={() => navigate('/groups')}>View Groups</button></div>
+            <div><button onClick={logout}>Log Out</button></div>
+        </div>
         </>
     )
 }

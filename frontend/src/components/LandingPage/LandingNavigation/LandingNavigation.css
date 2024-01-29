@@ -1,26 +1,70 @@
 .landing-nav-links {
     display: flex;
     justify-content: space-evenly;
+    margin-bottom: 25px;
+
     
 }
-
-#see-all-groups {
-    color: teal;
-    font-size: 20px;
-}
-
-#find-event {
-    color: teal;
-    font-size: 20px;
-}
-
-#start-group {
-    color: teal;
-    font-size: 20px;
+#start-group-disabled {
+    display: flex;
+    flex-direction: column;
 }
 
 #start-group-disabled {
+    position: relative;
+    left: 5px;
+    color: teal;
+    /* font-size: 20px; */
     cursor: not-allowed;
     color: gray;
     font-size: 20px;
+}
+
+#start-group-div {
+    display: flex;
+    flex-direction: column;
+}
+#start-group-img {
+    position: relative;
+    bottom: 10px;
+    height: 200px;
+}
+#start-group-link {
+    position: relative;
+    left: 5px;
+    color: teal;
+    font-size: 20px;
+}
+
+#find-event-div {
+    display: flex;
+    flex-direction: column;
+}
+#find-event-img {
+    position: relative;
+    top: 80px;
+    height: 100px;
+}
+#find-event-link {
+    position: relative;
+    top: 100px;
+    color: teal;
+    font-size: 20px;
+}
+
+
+#view-groups-img {
+    position: relative;
+    bottom: 10px;
+    height: 200px;
+}
+#view-groups-link {
+    position: relative;
+    left: 5px;
+    color: teal;
+    font-size: 20px;
+}
+#view-groups-div {
+    display: flex;
+    flex-direction: column;
 }

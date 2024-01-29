@@ -1,3 +1,4 @@
+
 .logo {
     position: relative;
     height: 100px;
@@ -13,16 +14,39 @@
     justify-content: space-between;
     height: 100px;
     padding: 0 20px;
+    border-bottom: 2px solid lightgray;
 }
 
 #modal-buttons {
     display: flex;
+    flex-direction: row;
+    height: 20px;
+    top: 35px;
 }
 
+
 #modal-buttons > *:not(:last-child) {
+    border: none;
+    background: transparent;
+    font-size: 25px;
     margin-right: 10px;
+}
+#modal-buttons > *:last-child {
+    border: none;
+    font-size: 25px;
+    background: transparent;
+}
+
+#modal-buttons > *:not(:last-child):hover {
+    color: teal;
+    cursor: pointer;
+}
+#modal-buttons > *:last-child:hover {
+    color: teal;
+    cursor: pointer;
 }
 
 .hidden {
     display: none;
 }
+

@@ -38,8 +38,7 @@ export const fetchEvents = () => async (dispatch) => {
 	const data = await res.json();
 
 	dispatch(getEvents(data));
-	console.log(data);
-	return res;
+	return data;
 };
 
 export const fetchEvent = (eventId) => async (dispatch) => {
@@ -78,8 +77,6 @@ export const createEvent = (formData, groupId) => async (dispatch) => {
 		}),
 	});
 	const data = await response.json();
-	console.log(response);
-	console.log(data);
 	dispatch(newEvent(data.event));
 	return data;
 };

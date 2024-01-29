@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createEvent } from '../../store/events.js';
 import {useNavigate, useParams} from 'react-router-dom'
 import './CreateEvent.css'
@@ -10,6 +10,16 @@ function CreateEvent() {
     const [errors, setErrors] = useState({})
     const { groupId } = useParams();
     const group = useSelector(state => state.groups.group)
+    const sessionUser = useSelector((state) => state.session.user);
+
+    useEffect(() => {
+        if (!sessionUser || !group){
+            navigate('/')
+        }
+        
+    }, [sessionUser, group])
+    
+
 
 
     async function handleSubmit(e) {
@@ -47,14 +57,12 @@ function CreateEvent() {
 
         try {
             const createdEvent = await dispatch(createEvent(formData, groupId))
-            console.log(createdEvent)
             const eventId = createdEvent.id;
             navigate(`/events/${eventId}`);
         } catch (res) {
             const data = await res.json();
             if (data?.errors) {
                 setErrors({...data.errors})
-                console.log(errors)
                 return errors
         }
     }
@@ -63,7 +71,7 @@ function CreateEvent() {
 return (
     <>
     <form onSubmit={handleSubmit}>
-            <h1>Create an event for {group.name}</h1>
+            <h1>Create an event for {group && group.name}</h1>
         <label>
             <p>What is the name of your event?</p>
             <input 

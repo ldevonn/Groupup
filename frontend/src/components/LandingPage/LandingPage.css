@@ -1,8 +1,35 @@
-.how-groupup-works {
+#title-and-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 600px;
+}
+
+#title {
+    font-size: 50px;
+}
+#title-text {
+    font-size: 22px;
+}
+
+#title-header {
     display: flex;
     justify-content: center;
+
 }
-.how-groupup-works-content {
+
+#title-img {
+    position: relative;
+    height: 300px;
+}
+
+#sub-title {
     display: flex;
+    font-size: 25px;
+    justify-content: center;
+}
+#sub-title-text {
+    display: flex;
+    font-size: 22px;
     justify-content: center;
 }
