@@ -3,6 +3,7 @@ import { useState } from "react";
 import { createGroup } from "../../../store/groups";
 import {useNavigate} from 'react-router-dom'
 import './NewGroup.css'
+import '../NewGroup/NewGroup.css'
 
 function NewGroup() {
     const dispatch = useDispatch()

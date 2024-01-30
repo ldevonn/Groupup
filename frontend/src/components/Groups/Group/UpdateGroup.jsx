@@ -79,7 +79,7 @@ function UpdateGroup() {
                 defaultValue={group ? group.city : ''}
                 placeholder="city">
             </input>
-            <div>{errors && errors.city}</div>
+            <div className="group-errors">{errors && errors.city}</div>
             <input 
                 className="text-input"
                 id="state"
@@ -89,7 +89,7 @@ function UpdateGroup() {
                 defaultValue={group ? group.state : ''}
                 placeholder="state">
             </input>
-            <div>{errors && errors.state}</div>
+            <div className="group-errors">{errors && errors.state}</div>
         </label>
         <label id="name-label">
             <h1>What will your group&apos;s name be?</h1>
@@ -103,7 +103,7 @@ function UpdateGroup() {
             defaultValue={group ? group.name : ''}
             placeholder="What is your group name?">
             </input>
-            <div>{errors && errors.groupName}</div>
+            <div className="group-errors">{errors && errors.groupName}</div>
         </label>
         <label id="about-label">
             <h1>Now describe what your group will be about</h1>
@@ -119,7 +119,7 @@ function UpdateGroup() {
             defaultValue={group ? group.about : ''}
             placeholder="Please write at least 30 characters">
             </input>
-            <div>{errors && errors.about}</div>
+            <div className="group-errors">{errors && errors.about}</div>
         </label>
         <label id="final-label">
             <h1>Final Steps...</h1>
@@ -132,7 +132,7 @@ function UpdateGroup() {
             <option value="InPerson">In Person</option>
             <option value="Online">Online</option>
             </select>
-            <div>{errors && errors.groupType}</div>
+            <div id="group-errors">{errors && errors.groupType}</div>
             <p>Is this an in person or online group?</p>
             <select
             id="type-input"
@@ -142,7 +142,7 @@ function UpdateGroup() {
             <option value="Public">Public</option>
             <option value="Private">Private</option>
             </select>
-            <div>{errors && errors.groupVisibility}</div>
+            <div className="group-errors">{errors && errors.groupVisibility}</div>
         </label>
         <button id="new-group-submit" type="submit">
             Update Group
