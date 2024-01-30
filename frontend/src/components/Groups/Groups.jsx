@@ -35,25 +35,27 @@ function Groups() {
     }
     return (
         <>
-        <div className='groups-header'>
-            <div className="event-group-nav">
-                <NavLink to='/events' className='events-link inactive'>Events</NavLink>
-                <NavLink to='/groups' className='groups-link active'>Groups</NavLink>
-            </div>
-            <p>Groups in Groupup</p>
-        </div>
-        <div className="group-container">
-            {groups && groups.map((group) => (
-                <div key={group.id} className="group" onClick={(e) => handleClick(e, group)}>
-                    <img id='image' src="https://media.istockphoto.com/id/1369814693/photo/los-angeles.jpg?s=2048x2048&w=is&k=20&c=6NP3lu8yXQoYTT4v8ot9pgl81pMNc2gZvYD4xD1Y5o8=" alt="Group Image" />
-                    <div className="group-details">
-                        <h1 id="name">{group.name}</h1>
-                        <p id='location'>{group.city}, {group.state}</p>
-                        <p id='details'>{group.about}</p>
-                        {events && <p id='events'>{events.filter((event) => event.groupId === group.id).length} Events · {privateCheck(group)}</p>}
-                    </div>
+        <div>
+            <div className='groups-header'>
+                <div>
+                    <NavLink to='/events' className='events-link inactive'>Events</NavLink>
+                    <NavLink to='/groups' className='groups-link active'>Groups</NavLink>
                 </div>
-            ))}
+                <p>Groups in Groupup</p>
+            </div>
+            <div className="group-container">
+                {groups && groups.map((group) => (
+                    <div key={group.id} className="group" onClick={(e) => handleClick(e, group)}>
+                        <img id='image' src="https://media.istockphoto.com/id/1369814693/photo/los-angeles.jpg?s=2048x2048&w=is&k=20&c=6NP3lu8yXQoYTT4v8ot9pgl81pMNc2gZvYD4xD1Y5o8=" alt="Group Image" />
+                        <div className="group-details">
+                            <h1 id="name">{group.name}</h1>
+                            <p id='location'>{group.city}, {group.state}</p>
+                            <p id='details'>{group.about}</p>
+                            {events && <p id='events'>{events.filter((event) => event.groupId === group.id).length} Events · {privateCheck(group)}</p>}
+                        </div>
+                    </div>
+                ))}
+            </div>
         </div>
         </>
     );

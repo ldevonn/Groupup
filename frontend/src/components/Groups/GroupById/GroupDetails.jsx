@@ -7,6 +7,8 @@ import { removeGroup } from "../../../store/groups"
 import JoinGroupButton from "./JoinGroupButton/JoinGroupButton.jsx"
 import { fetchEvents } from "../../../store/events.js"
 import { formatTimestamp } from "../../HelperFunctions/HelperFunctions.jsx"
+import DeleteGroupModal from "./DeleteGroupModal/DeleteGroupModal.jsx"
+import OpenModalButton from '../../OpenModalButton/OpenModalButton.jsx';
 
 function GroupById() {
     const navigate = useNavigate()
@@ -29,13 +31,10 @@ function GroupById() {
 
     const groupEvents = events ? events.filter((event) => event.groupId === group.id) : [];
     const currentDate = new Date();
-    const futureEvents = groupEvents.filter((event) => new Date(event.startDate) > currentDate);
-    const pastEvents = groupEvents.filter((event) => new Date(event.startDate) <= currentDate);
-
-    const handleDeleteGroup = () => {
-        dispatch(removeGroup(group))
-        navigate ('/groups')
-    }
+    const futureEvents = groupEvents.filter((event) => new Date(event.startDate) > currentDate)
+        .sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+    const pastEvents = groupEvents.filter((event) => new Date(event.startDate) <= currentDate)
+        .sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
 
     const handleUpdateGroup = () => {
         navigate(`/groups/${group.id}/edit`)
@@ -53,6 +52,10 @@ function GroupById() {
         }
     }
 
+    function handleDeleteGrp() {
+        navigate('/groups')
+    }
+
     return (
         <>
         {group &&
@@ -64,7 +67,7 @@ function GroupById() {
             <p><i className="fa-solid fa-location-dot"></i> - {group.city}, {group.state}</p>
             <p>{groupEvents.length} events · {isPrivate()}</p>
             {isOrganizer && <button onClick={handleNewEvent}>Create Event</button>}
-            {isOrganizer && <button onClick={handleDeleteGroup}>Delete Group</button>}
+            {isOrganizer && <OpenModalButton buttonText="Delete Group" modalComponent={<DeleteGroupModal group={group} handleDeleteGrp={handleDeleteGrp}/>}/>}
             {isOrganizer && <button onClick={handleUpdateGroup}>Edit Group</button>}
             {isOrganizer && <JoinGroupButton/>}
         </div>
