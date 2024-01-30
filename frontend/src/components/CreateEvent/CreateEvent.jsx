@@ -17,7 +17,7 @@ function CreateEvent() {
             navigate('/')
         }
         
-    }, [sessionUser, group])
+    }, [sessionUser, group, navigate])
     
 
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { NavLink, useNavigate, useParams } from "react-router-dom"
-import {fetchEvent, removeEvent} from '../../store/events.js'
+import {fetchEvent} from '../../store/events.js'
 import { fetchGroup } from "../../store/groups.js"
 import './EventDetails.css'
 import {formatTimestamp} from '../HelperFunctions/HelperFunctions.jsx'

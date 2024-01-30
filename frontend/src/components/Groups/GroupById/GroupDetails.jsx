@@ -3,7 +3,6 @@ import { NavLink, useNavigate, useParams } from "react-router-dom"
 import './GroupDetails.css'
 import { useDispatch, useSelector } from "react-redux"
 import { fetchGroup } from "../../../store/groups"
-import { removeGroup } from "../../../store/groups"
 import JoinGroupButton from "./JoinGroupButton/JoinGroupButton.jsx"
 import { fetchEvents } from "../../../store/events.js"
 import { formatTimestamp } from "../../HelperFunctions/HelperFunctions.jsx"
