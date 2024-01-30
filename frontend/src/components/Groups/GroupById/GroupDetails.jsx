@@ -60,16 +60,22 @@ function GroupById() {
         {group &&
         <div>
             <div className="group-title-card">
-            <NavLink to='/groups'><i className="fa-solid fa-angle-left"></i> Groups</NavLink>
-            <h1>{group.name}</h1>
-            <img className="groupImage" src="https://media.istockphoto.com/id/1369814693/photo/los-angeles.jpg?s=2048x2048&w=is&k=20&c=6NP3lu8yXQoYTT4v8ot9pgl81pMNc2gZvYD4xD1Y5o8="></img>
-            <p><i className="fa-solid fa-location-dot"></i> - {group.city}, {group.state}</p>
-            <p>{groupEvents.length} events · {isPrivate()}</p>
-            {isOrganizer && <button onClick={handleNewEvent}>Create Event</button>}
-            {isOrganizer && <OpenModalButton buttonText="Delete Group" modalComponent={<DeleteGroupModal group={group} handleDeleteGrp={handleDeleteGrp}/>}/>}
-            {isOrganizer && <button onClick={handleUpdateGroup}>Edit Group</button>}
-            {isOrganizer && <JoinGroupButton/>}
-        </div>
+                <div id="bread-img">
+                    <NavLink to='/groups'><i className="fa-solid fa-angle-left"></i> Groups</NavLink>
+                    <img className="groupImage" src="https://media.istockphoto.com/id/1369814693/photo/los-angeles.jpg?s=2048x2048&w=is&k=20&c=6NP3lu8yXQoYTT4v8ot9pgl81pMNc2gZvYD4xD1Y5o8="></img>
+                </div>
+                <div id="name-location-events">
+                    <h1>{group.name}</h1>
+                    <p><i className="fa-solid fa-location-dot"></i> - {group.city}, {group.state}</p>
+                    <p>{groupEvents.length} events · {isPrivate()}</p>
+                </div>
+                <div id="organizer-buttons">
+                    {isOrganizer && <button id="createEventBtn" onClick={handleNewEvent}>Create Event</button>}
+                    {isOrganizer && <OpenModalButton buttonText="Delete Group" modalComponent={<DeleteGroupModal group={group} handleDeleteGrp={handleDeleteGrp}/>}/>}
+                    {isOrganizer && <button id="editGroupBtn" onClick={handleUpdateGroup}>Edit Group</button>}
+                    {!isOrganizer && <JoinGroupButton/>}
+                </div>
+            </div>
         <div id="about-down">
             <div id="group-about">
                 <h3>Organizer</h3>
@@ -82,12 +88,16 @@ function GroupById() {
                     <div>
                         <h3>Upcoming Events {`(${futureEvents.length})`}</h3>
                         {futureEvents.map((event) => (
-                        <div key={event.id} onClick={() => navigate(`/events/${event.id}`)}>
-                            <img id='image' src="https://media.istockphoto.com/id/1369814693/photo/los-angeles.jpg?s=2048x2048&w=is&k=20&c=6NP3lu8yXQoYTT4v8ot9pgl81pMNc2gZvYD4xD1Y5o8=" alt="Group Image" />
-                            <p>{event.name}</p>
-                            <p>{formatTimestamp(event.startDate)}</p>
-                            <p>{event.Group.city}, {event.Group.state}</p>
-                            <p>{event.description}</p>
+                        <div key={event.id} onClick={() => navigate(`/events/${event.id}`)} className="event-card">
+                            <div id="image-date-name-location">
+                                <img id='group-events-image' src="https://media.istockphoto.com/id/1369814693/photo/los-angeles.jpg?s=2048x2048&w=is&k=20&c=6NP3lu8yXQoYTT4v8ot9pgl81pMNc2gZvYD4xD1Y5o8=" alt="Group Image" />
+                                <div id="date-name-location">
+                                    <p id="group-event-time">{event.name}</p>
+                                    <p id="group-event-name">{formatTimestamp(event.startDate)}</p>
+                                    <p id="group-event-location">{event.Group.city}, {event.Group.state}</p>
+                                </div>
+                            </div>
+                            <p id="group-event-about">{event.description}</p>
                         </div>
                         ))}
                     </div> : 

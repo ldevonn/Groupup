@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import {useNavigate} from 'react-router-dom'
 import { updateGroup } from "../../../store/groups";
+import './UpdateGroup.css'
 
 function UpdateGroup() {
     const dispatch = useDispatch()
@@ -62,14 +63,17 @@ function UpdateGroup() {
 
   return (
     <>
-    <form onSubmit={handleSubmit}>
+    <form id="edit-group-form" onSubmit={handleSubmit}>
+        <div id="edit-group-header">
             <h1>Update Your Group&apos;s Information</h1>
             <h1>We&apos;ll walk you through a few steps to update your group&apos;s information</h1>
-        <label>
+        </div>
+        <label id="location-label">
             <h1>First, set your group&apos;s location.</h1>
             <p>Meetup groups meet locally, in person and online. We&apos;ll connect you with people in your area, and more can join you online.</p>
             <input 
                 type="text"
+                className="text-input"
                 name="city"
                 required
                 defaultValue={group ? group.city : ''}
@@ -77,6 +81,8 @@ function UpdateGroup() {
             </input>
             <div>{errors && errors.city}</div>
             <input 
+                className="text-input"
+                id="state"
                 type="text"
                 name="state"
                 required
@@ -85,10 +91,12 @@ function UpdateGroup() {
             </input>
             <div>{errors && errors.state}</div>
         </label>
-        <label>
+        <label id="name-label">
             <h1>What will your group&apos;s name be?</h1>
             <p>Choose a name that will give people a clear idea of what the group is about. Feel free to get creative! You can edit this later if you change your mind.</p>
             <input
+            className="text-input"
+            id="name-input"
             type="text"
             name="groupName"
             required
@@ -97,12 +105,14 @@ function UpdateGroup() {
             </input>
             <div>{errors && errors.groupName}</div>
         </label>
-        <label>
+        <label id="about-label">
             <h1>Now describe what your group will be about</h1>
             <p>People will see this when we promote your group, but you&apos;ll be able to add to it later, too.
                 1, What&apos;s the purpose of the group? 2. Who should join?
                 3. What will you do at your events?</p>
             <input
+            className="text-input"
+            id="about-input"
             type="text"
             name="groupDescription"
             required
@@ -111,7 +121,7 @@ function UpdateGroup() {
             </input>
             <div>{errors && errors.about}</div>
         </label>
-        <label>
+        <label id="final-label">
             <h1>Final Steps...</h1>
             <p>Is this an in person or online group?</p>
             <select
@@ -125,6 +135,7 @@ function UpdateGroup() {
             <div>{errors && errors.groupType}</div>
             <p>Is this an in person or online group?</p>
             <select
+            id="type-input"
             type="dropdown"
             name='groupVisibility'
             required>
