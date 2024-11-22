@@ -23,7 +23,7 @@ authenticate-me
 ```
 
 `cd` into the __frontend__ folder.
-
+c
 ## Phases
 
 * Frontend Phases
