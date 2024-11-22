@@ -19,7 +19,7 @@ authenticate-me
 ├── frontend/
 ├── .gitignorea
 ├── package-lock.json
-└── package.json
+└── package.jsonb
 ```
 
 `cd` into the __frontend__ folder.
