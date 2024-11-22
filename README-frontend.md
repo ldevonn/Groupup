@@ -17,7 +17,7 @@ Your file structure should now look like this:
 authenticate-me
 ├── backend/
 ├── frontend/
-├── .gitignore
+├── .gitignorea
 ├── package-lock.json
 └── package.json
 ```
